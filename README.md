@@ -1,6 +1,6 @@
 <h3 align="center">Berloga Planetlander</h3>
 
-# [Играть сейчас!](https://js13kgames.com/games/interplanetary-postal-service/index.html) 
+# [Играть сейчас!](https://moonlander.kruzhok.org/) 
 
 <div align="center">
 
