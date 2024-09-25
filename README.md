@@ -6,7 +6,7 @@
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
 [![GitHub Issues](https://img.shields.io/github/issues/kruzhok-team/berloga-planetlander.svg)](https://github.com/kruzhok-team/berloga-planetlander/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/sergeyiksanov/berloga-planetlander.svg)](https://github.com/kruzhok-team/berloga-planetlander/pulls)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kruzhok-team/berloga-planetlander.svg)](https://github.com/kruzhok-team/berloga-planetlander/pulls)
 [![License](https://img.shields.io/badge/license-GNU-blue.svg)](/LICENSE)
 
 </div>
