@@ -1,0 +1,19 @@
+{
+  "name": "berloga-planetlander",
+  "version": "1.0.0",
+  "description": "<h3 align=\"center\">Berloga Planetlander</h3>",
+  "main": "index.js",
+  "bin": {
+    "berloga-planetlander": "bin/audio.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
