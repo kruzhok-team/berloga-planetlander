@@ -2,21 +2,19 @@
 
 set -e
 
-# Generate compressed maps
+# Генерация карт
 mkdir -p bin
 gcc src/maps/compress.c -o bin/compress
 ./bin/compress > src/wasm/maps.h
 
-# Generate wasm file
+# Сборка React-приложения
+npm run build
+
+# Генерация wasm файла
 make clean
 make
 
-wasm-dis bin/game.wasm  | grep '(export\|(import\|(global \$'
-
-ls -la bin/game.wasm
-
-# copy JS file into bin directory.
-# The game can be tested in this directory
+# копирование файлов в bin директорию
 cp src/js/* bin/
 
 exit 1
