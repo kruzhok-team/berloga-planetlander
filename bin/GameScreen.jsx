@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 
-const GameScreen = () => {
+const GameScreen = ({levelNumber, onLose}) => {
   useEffect(() => {
-    // Ваш код инициализации игры
-    Main();
+    Main(levelNumber, onLose);
   }, []);
 
   return (
     <div>
+      <script src="audio.js"></script>
+      <script src="game.js"></script>
+      <script src="level.js"></script>
       <canvas id="fluidcanvas" width="256" height="128" style={{ zIndex: 1 }}></canvas>
       <canvas id="overlaycanvas" width="1024" height="512" style={{ zIndex: 2 }}></canvas>
 

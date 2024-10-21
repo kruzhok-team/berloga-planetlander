@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 
-const GameScreen = () => {
+const GameScreen = ({levelNumber, onLose}) => {
   useEffect(() => {
-    // Ваш код инициализации игры
-    Main();
+    Main(levelNumber, onLose);
   }, []);
 
   return (

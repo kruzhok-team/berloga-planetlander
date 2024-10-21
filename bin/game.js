@@ -230,7 +230,7 @@ function CountCollisionPixels(c) {
     return {boundary: boundarycount, landingpad: landingpadcount}
 };
 
-function Loop() {
+function Loop(onLose) {
     if (gamephase === 0) {
         game._SetKeys(ukey, dkey, rkey, lkey);
         game._IsThrustOn() ? audio.ThrustOn() : audio.ThrustOff();
@@ -241,7 +241,7 @@ function Loop() {
     window.requestAnimationFrame(Draw);
 
     if (gamephase === 2) {
-        window.setTimeout(Loop, 0);
+        window.setTimeout(() => Loop(onLose), 0);
         return;
     }
 
@@ -255,11 +255,12 @@ function Loop() {
         audio.Explosion();
         audio.ThrustOff();
         ships--;
-        if (ships === 0)
+        if (ships === 4)
             window.setTimeout(() => {
                 gamephase = 0;
-                level = -1;
-                SetLevel();
+                // level = -1;
+                // SetLevel();
+                onLose();
             }, 5000);
         else
             window.setTimeout(() => {
@@ -268,7 +269,7 @@ function Loop() {
             }, 5000);
     }
 
-    window.setTimeout(Loop, 0);
+    window.setTimeout(() => Loop(onLose), 0);
 }
 
 function SetLevel() {
@@ -378,7 +379,7 @@ function onkey(event, v) {
 }
 
 
-function Main() {
+function Main(levelNumber, onLose) {
     InitGraphics(256, 128);
     Resize();
     window.addEventListener('resize', () => Resize());
@@ -405,9 +406,9 @@ function Main() {
             document.addEventListener('keydown', event => onkey(event, 1));
             document.addEventListener('keyup', event => onkey(event, 0));
 
-            level = 0;
+            level = levelNumber;
             SetLevel();
-            Loop();
+            Loop(onLose);
         },
         err => alert(err)
     );
