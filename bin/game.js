@@ -414,3 +414,29 @@ function Main(levelNumber, onLose) {
     );
 }
 
+function ClearLevel() {
+    level = 0 | 0; // -1 = lost, 0 = title screen, 1 = level 1, last = won
+    nlevel = 8;
+    lastlevel = -2;
+    gamephase = 0; // 0 = normal game, 1 = destroyed and waiting phase, 2 = waiting phase during start
+    ships = 5;
+    collisioncounts = {}; // number of collision pixels
+    fps = 0;
+    frames = 0;
+    score = 0;
+
+    t0 = Date.now();
+
+    game = {};
+    color = null;
+    boundary = null;
+    maps = null;
+
+    ukey = 0.;
+    rkey = 0.;
+    dkey = 0.;
+    lkey = 0.;
+
+// contains all graphics relevant data
+    graphics = {};
+}
