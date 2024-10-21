@@ -255,7 +255,7 @@ function Loop(onLose) {
         audio.Explosion();
         audio.ThrustOff();
         ships--;
-        if (ships === 4)
+        if (ships === 0)
             window.setTimeout(() => {
                 gamephase = 0;
                 // level = -1;
