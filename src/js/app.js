@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import StartScreen from './StartScreen';
 import GameScreen from './GameScreen';
 import LevelsScreen from './LevelsScreen';
-import LoseScreen from './LoseScreen';
+import FinishScreen from './FinishScreen';
 
 const App = () => {
   const [screen, setScreen] = useState(0);
   const [levelId, setLevelId] = useState(1);
+  const [win, setWin] = useState(false);
 
   const StartStartScreen = () => {
     setScreen(0);
@@ -19,7 +20,7 @@ const App = () => {
   const startLevels = () => {
     setScreen(1);
   };
-  const startLoseScreen = () => {
+  const startFinishScreen = () => {
     setScreen(3);
   }
 
@@ -30,9 +31,15 @@ const App = () => {
       ) : screen === 1 ? (
         <LevelsScreen onClickLevel={startGame} />
       ) : screen === 2 ? (
-        <GameScreen levelNumber={levelId} onLose={startLoseScreen}/>
+        <GameScreen levelNumber={levelId} onLose={() => {
+          setWin(false);
+          startFinishScreen();
+        }} onWin={() => {
+          setWin(true);
+          startFinishScreen();
+        }}/>
       ) : (
-        <LoseScreen onNext={StartStartScreen} />
+        <FinishScreen onNext={StartStartScreen} win={win} />
       )}
     </div>
   );

@@ -1,13 +1,16 @@
 import React from 'react';
 
-const LoseScreen = ({onNext}) => (
+const FinishScreen = ({onNext, win}) => (
   <div style={{ color: 'white', textAlign: 'center', marginTop: '20%' }}>
-    <h1>You lose</h1>
+    {win ? (
+      <h1>You win</h1>
+    ) : (
+      <h1>You lose</h1>
+    )}
     <button onClick={() => {
-      ClearLevel();
       onNext();
     }}>Next</button>
   </div>
 );
 
-export default LoseScreen;
+export default FinishScreen;
