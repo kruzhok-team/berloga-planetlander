@@ -49,6 +49,9 @@ void __attribute__((export_name("_Init"))) Init()
 
 void __attribute__((export_name("_Reset"))) Reset(int _level, int _bgcolor1, int _bgcolor2, int _density2color, int x, int y)
 {
+    /*printf("bgcolor1: 0x%X\n", _bgcolor1);*/
+    /*printf("bgcolor2: 0x%X\n", _bgcolor2);*/
+    /*printf("density2color: 0x%X\n", _density2color);*/
     dt = 0.05f;
     realtime = -1.;
     level = _level;
