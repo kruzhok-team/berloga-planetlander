@@ -1,6 +1,6 @@
 import React from "react";
 
-const StartScreen = ({ onStart }) => (
+const StartScreen = ({ onStart, onAbout }) => (
   <div
     style={{
       width: "100%",
@@ -71,8 +71,7 @@ const StartScreen = ({ onStart }) => (
       </button>
       <button
         onClick={() => {
-          onStart();
-          audio.Init();
+          onAbout();
         }}
         style={{
           minWidth: "100px",

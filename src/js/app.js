@@ -4,6 +4,7 @@ import StartScreen from "./StartScreen";
 import GameScreen from "./GameScreen";
 import LevelsScreen from "./LevelsScreen";
 import FinishScreen from "./FinishScreen";
+import AboutScreen from "./AboutScreen";
 
 const App = () => {
   const [screen, setScreen] = useState(0);
@@ -23,11 +24,14 @@ const App = () => {
   const startFinishScreen = () => {
     setScreen(3);
   };
+  const startAboutScreen = () => {
+    setScreen(4);
+  };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {screen === 0 ? (
-        <StartScreen onStart={startLevels} />
+        <StartScreen onStart={startLevels} onAbout={startAboutScreen} />
       ) : screen === 1 ? (
         <LevelsScreen onClickLevel={startGame} />
       ) : screen === 2 ? (
@@ -42,8 +46,10 @@ const App = () => {
             startFinishScreen();
           }}
         />
-      ) : (
+      ) : screen === 3 ? (
         <FinishScreen onNext={StartStartScreen} win={win} />
+      ) : (
+        <AboutScreen onBack={StartStartScreen} />
       )}
     </div>
   );
