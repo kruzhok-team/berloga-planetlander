@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import StartScreen from "./StartScreen";
 import GameScreen from "./GameScreen";
 import LevelsScreen from "./LevelsScreen";
-import FinishScreen from "./FinishScreen";
+import DefeatScreen from "./DefeatScreen";
 import AboutScreen from "./AboutScreen";
+import VictoryScreen from "./VictoryScreen";
 
 const App = () => {
   const [screen, setScreen] = useState(0);
   const [levelId, setLevelId] = useState(1);
-  const [win, setWin] = useState(false);
 
   const StartStartScreen = () => {
     setScreen(0);
@@ -21,11 +21,14 @@ const App = () => {
   const startLevels = () => {
     setScreen(1);
   };
-  const startFinishScreen = () => {
+  const startDefeatScreen = () => {
     setScreen(3);
   };
   const startAboutScreen = () => {
     setScreen(4);
+  };
+  const startVictoryScreen = () => {
+    setScreen(5);
   };
 
   return (
@@ -38,18 +41,18 @@ const App = () => {
         <GameScreen
           levelNumber={levelId}
           onLose={() => {
-            setWin(false);
-            startFinishScreen();
+            startDefeatScreen();
           }}
           onWin={() => {
-            setWin(true);
-            startFinishScreen();
+            startVictoryScreen();
           }}
         />
       ) : screen === 3 ? (
-        <FinishScreen onNext={StartStartScreen} win={win} />
-      ) : (
+        <DefeatScreen onBackToMain={StartStartScreen} />
+      ) : screen === 4 ? (
         <AboutScreen onBack={StartStartScreen} />
+      ) : (
+        <VictoryScreen onBackToMain={StartStartScreen} />
       )}
     </div>
   );
