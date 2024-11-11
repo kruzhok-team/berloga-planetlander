@@ -964,6 +964,7 @@ const GameScreen = ({ levelNumber, onLose, onWin }) => {
               fill: "rgba(255,255,255,0.5)",
               strokeWidth: 0.5,
               stroke: "rgb(0,0,0)",
+              borderRadius: "10px",
             }}
           ></rect>
           <rect
