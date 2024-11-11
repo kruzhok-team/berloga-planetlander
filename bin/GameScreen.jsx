@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./audio.js";
 
 const GAME_PHASES = {
   PLAY: 0,
@@ -7,7 +8,7 @@ const GAME_PHASES = {
 };
 
 class Game {
-  constructor(level, onLose, onWin, image) {
+  constructor(level, onLose, onWin, image, audio) {
     this.background_image = image;
     this.level = level;
     this.gamePhase = GAME_PHASES.PLAY;
@@ -16,6 +17,8 @@ class Game {
     this.fps = 0;
     this.frames = 0;
     this.score = 0;
+
+    this.audio = audio;
 
     this.onLose = onLose;
     this.onWin = onWin;
@@ -33,6 +36,8 @@ class Game {
     this.lkey = 0;
 
     this.graphics = {};
+
+    this.isRunning = true;
 
     this.texture = Array.from(
       { length: 17 * 32 },
@@ -56,7 +61,6 @@ class Game {
     this.graphics.svg = document.getElementById("svg");
     this.graphics.timerText = document.getElementById("timertext");
     this.graphics.levelText = document.getElementById("leveltext");
-
     this.graphics.fluidcanvas = document.getElementById("fluidcanvas");
     this.graphics.fluidcanvas.width = N;
     this.graphics.fluidcanvas.height = M;
@@ -210,7 +214,7 @@ class Game {
     if (
       Math.abs(newcollisioncounts.boundary - this.collisionCounts.boundary) > 10
     ) {
-      audio.ThrustOff();
+      this.audio.ThrustOff();
       this.gameWasm._Destroyed();
       return;
     }
@@ -220,14 +224,14 @@ class Game {
         newcollisioncounts.landingpad - this.collisionCounts.landingpad,
       ) > 10
     ) {
-      audio.ThrustOff();
+      this.audio.ThrustOff();
       if (this.gameWasm._ShipGetVY() > 2) {
         this.gameWasm._Destroyed();
       } else {
         console.log("YOU WIN");
         // ТУТ ВРОДЕ КАК ЛОГИКА ПОБЕДЫ
         this.onWin();
-        this.SetLevel();
+        //this.SetLevel();
       }
     }
   }
@@ -240,18 +244,6 @@ class Game {
       this.lastUpdateTime = timeNow;
       this.frames = 0;
     }
-
-    // if (!this.graphics || !this.graphics.imagedata || !this.color || this.color.length !== this.graphics.N * this.graphics.M * 4) {
-    //   console.error("Graphics or color data is not initialized properly.");
-    //   console.log("graphics:", this.graphics);
-    //   console.log("color:", this.color);
-    //   console.log("N:", this.graphics ? this.graphics.N : undefined);
-    //   console.log("M:", this.graphics ? this.graphics.M : undefined);
-    //   console.log("color length:", this.color ? this.color.length : undefined);
-    //   return;
-    // }
-
-    // copy from webassembly memory to canvas
 
     for (let i = 0; i < this.graphics.N * this.graphics.M * 4; i++)
       this.graphics.imagedata.data[i] = this.color[i];
@@ -285,10 +277,21 @@ class Game {
     return { boundary: boundarycount, landingpad: landingpadcount };
   }
 
+  StopGame() {
+    this.audio.Stop();
+    //this.audio.initialized = false;
+    this.audio.ThrustOff();
+    this.isRunning = false;
+  }
+
   Loop(onLose) {
+    if (!this.isRunning) return;
+
     if (this.gamePhase === GAME_PHASES.PLAY) {
       this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey);
-      this.gameWasm._IsThrustOn() ? audio.ThrustOn() : audio.ThrustOff();
+      this.gameWasm._IsThrustOn()
+        ? this.audio.ThrustOn()
+        : this.audio.ThrustOff();
     }
     this.gameWasm._Step(Date.now(), this.gamePhase === GAME_PHASES.PLAY);
 
@@ -307,8 +310,8 @@ class Game {
     if (this.gameWasm._IsExploded() && this.gamePhase === GAME_PHASES.PLAY) {
       this.gamePhase = GAME_PHASES.DESTROY_WAITING;
       window.localStorage.dateOfLastAccident = Date.now();
-      audio.Explosion();
-      audio.ThrustOff();
+      this.audio.Explosion();
+      this.audio.ThrustOff();
 
       if (this.ships > 0) {
         // Проверяем, что у нас есть корабли
@@ -340,14 +343,14 @@ class Game {
 
     this.gamePhase = GAME_PHASES.WAITING;
 
-    audio.Beep();
+    this.audio.Beep();
     this.graphics.levelText.innerHTML = "Уровень " + this.level + " / " + 8;
     this.graphics.timerText.innerHTML = "3";
     window.setTimeout(() => {
-      audio.Beep();
+      this.audio.Beep();
       this.graphics.timerText.innerHTML = "2";
       window.setTimeout(() => {
-        audio.Beep();
+        this.audio.Beep();
         this.graphics.timerText.innerHTML = "1";
         window.setTimeout(() => {
           this.graphics.timerText.innerHTML = "";
@@ -437,7 +440,7 @@ class Game {
   onkey(event, v) {
     console.log("'", event.code, "'", event.key, "'"); // Логирование нажатой клавиши
     if (v && event.code === "Space") {
-      audio.EnableDisable(); // Включение/выключение аудио
+      this.audio.EnableDisable(); // Включение/выключение аудио
       return;
     }
 
@@ -511,7 +514,7 @@ class Game {
       );
 
       // Инициализация звука и обработка событий клавиш
-      audio.Wind();
+      this.audio.Wind();
       document.addEventListener(
         "keydown",
         function (event) {
@@ -889,7 +892,26 @@ const GameScreen = ({ levelNumber, onLose, onWin }) => {
     let image = new Image();
     image.src = "./backgroud.jpg";
     image.onload = () => {
-      let game = new Game(levelNumber, onLose, onWin, image);
+      let audio = new AudioClass();
+      audio.Init();
+      let game = new Game(
+        levelNumber,
+        () => {
+          game.StopGame();
+          audio = null;
+          game = null;
+          onLose();
+        },
+        () => {
+          game.StopGame();
+          audio = null;
+          game = null;
+          onWin();
+          console.log(game);
+        },
+        image,
+        audio,
+      );
       console.log("init", game);
       game.Main(levelNumber, onLose);
       console.log("main");

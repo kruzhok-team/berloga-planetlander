@@ -40,7 +40,7 @@ const StartScreen = ({ onStart, onAbout }) => (
       <button
         onClick={() => {
           onStart();
-          audio.Init();
+          //audio.Init();
         }}
         style={{
           minWidth: "200px",
