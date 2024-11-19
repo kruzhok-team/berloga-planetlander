@@ -682,66 +682,6 @@ class Game {
       this.graphics.boundarycanvas.height,
     );
     switch (level) {
-      case -1:
-        c.font = "100px Arial";
-        c.fillStyle = "#000000FF";
-        c.fillText("ВЫ", 200, 200);
-        c.fillText("ПРОИГРАЛИ", 320, 330);
-        c.strokeStyle = "#A01010FF";
-        c.lineWidth = 2;
-        c.strokeText("ВЫ", 200, 200);
-        c.strokeText("ПРОИГРАЛИ", 320, 330);
-
-        c.font = "50px Arial";
-        c.strokeStyle = "#A01010FF";
-        c.fillText("У вас закончились корабли", 230, 390);
-        c.strokeText("У вас закончились корабли", 230, 390);
-        break;
-
-      case 0:
-        this.ships = 5;
-        this.score = 0;
-        c.shadowOffsetY = 0;
-
-        // c.font = "500px Arial";
-        // CenterText(c, "📯", 350);
-
-        c.fillStyle = "#FFFFFF";
-        c.font = "100px Roboto";
-        this.FillCenterText(c, "МЕЖПЛАНЕТНАЯ", 110);
-        this.FillCenterText(c, "ПОЧТОВАЯ", 210);
-        this.FillCenterText(c, "СЛУЖБА", 310);
-
-        c.font = "30px Arial";
-        let str = "Гарантированная доставка в течение вашей жизни";
-        if (window.localStorage.dateOfLastAccident) {
-          let lastAccident =
-            Math.floor(
-              ((Date.now() - window.localStorage.dateOfLastAccident) /
-                1000 /
-                3600 /
-                24) *
-                10000,
-            ) / 10000;
-          str = "Без происшествий с " + lastAccident + " дня";
-        }
-        this.FillCenterText(c, str, 370);
-
-        c.font = "20px Arial";
-        c.fillStyle = "#FFFFFFFF";
-        this.FillCenterText(
-          c,
-          "Ваша задача как почтальона — доставлять почту в отдаленные колонии.",
-          420,
-        );
-        this.FillCenterText(
-          c,
-          "Используйте клавиши курсора или WASD, чтобы управлять своим почтовым посадочным модулем.",
-          450,
-        );
-        this.FillCenterText(c, "Пробел для переключения звука", 480);
-        break;
-
       case 1:
         this.DrawMap(c, 0, { r: 0xb8, g: 0x69, b: 0x72 });
         c.clearRect(330, 120, 230, 30);
@@ -752,15 +692,6 @@ class Game {
         let data = c.getImageData(0, 0, 1024, 512).data;
         this.DrawBuilding(c, 880, 200, 65, 200);
         this.DrawBuilding(c, 840, 250, 25, 150);
-        /*
-            for(let i=0; i<100; i++)
-            {
-                let x = Math.floor(Math.random()*1024);
-                let y = Math.floor(Math.random()*512);
-                if (y > 200)
-                if (data[(y*1024+x)*4+3] == 0xFF) DrawTree(c, x, y, 0, 0);
-            }
-            */
         break;
 
       case 2:
@@ -830,28 +761,11 @@ class Game {
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(0, 490, 80, 10);
         break;
-
-      case 9:
-        this.gameWasm._Reset(level, 0xff7070, 0x8f3030, 0xa0a0a0, 128, 84);
-        c.font = "80px Arial";
-        c.fillStyle = "#FFFFFFFF";
-        this.FillCenterText(c, "Вы успешно", 150);
-        this.FillCenterText(c, "доставили всю почту", 230);
-        c.font = "50px Arial";
-        this.FillCenterText(
-          c,
-          "" + Math.floor(ships * 500 + score) + " Баллов",
-          300,
-        );
-        break;
     }
   }
 
   ResetLevel(level) {
     switch (level) {
-      case -1: // dead
-        this.gameWasm._Reset(this.level, 0, 0, 0x1010ff, -1e3, -1e3);
-        break;
       case 0: // title
         this.gameWasm._Reset(
           this.level,
@@ -876,35 +790,70 @@ class Game {
         break;
 
       case 2:
-        this.gameWasm._Reset(this.level, 0x90a583, 0x94b9af, 0x11299b, 50, 10);
+        this.gameWasm._Reset(
+          this.level,
+          0x0090a583,
+          0x0094b9af,
+          0xff11299b,
+          50,
+          10,
+        );
         this.gameWasm._ShipSetActive();
         break;
 
       case 3: // dungeon
-        this.gameWasm._Reset(this.level, 0x0078a2, 0x0068a5, 0x980063, 20, 100);
+        this.gameWasm._Reset(
+          this.level,
+          0x000078a2,
+          0x000068a5,
+          0xff980063,
+          20,
+          100,
+        );
         this.gameWasm._ShipSetActive();
         break;
 
       case 4:
-        this.gameWasm._Reset(this.level, 0x101010, 0x101010, 0x0030a0, 25, 60);
+        this.gameWasm._Reset(
+          this.level,
+          0x00101010,
+          0x00101010,
+          0xff0030a0,
+          25,
+          60,
+        );
         this.gameWasm._ShipSetActive();
         break;
 
       case 5: // waterfall
-        this.gameWasm._Reset(this.level, 0x0b17af, 0x000868, 0x0b9daf, 25, 50);
+        this.gameWasm._Reset(
+          this.level,
+          0x000b17af,
+          0x00000868,
+          0xff0b9daf,
+          25,
+          50,
+        );
         this.gameWasm._ShipSetActive();
         break;
 
       case 6:
-        this.gameWasm._Reset(this.level, 0x263230, 0x161210, 0xe0e0e0, 30, 100);
+        this.gameWasm._Reset(
+          this.level,
+          0x00263230,
+          0x00161210,
+          0xffe0e0e0,
+          30,
+          100,
+        );
         this.gameWasm._ShipSetActive();
 
       case 7:
         this.gameWasm._Reset(
           this.level,
-          0xea7d5a7d,
-          0x421c25,
-          0x4ef4f4,
+          0x00ea7d5a7d,
+          0x00421c25,
+          0xff4ef4f4,
           50,
           10,
         );
@@ -914,17 +863,13 @@ class Game {
       case 8:
         this.gameWasm._Reset(
           this.level,
-          0x53942a94,
-          0x9269d4,
-          0x8d4f8d,
+          0x0053942a94,
+          0x009269d4,
+          0xff8d4f8d,
           220,
           20,
         );
         this.gameWasm._ShipSetActive();
-        break;
-
-      case 9:
-        this.gameWasm._Reset(this.level, 0xff7070, 0xff7070, 0xa0a0a0, 128, 64);
         break;
     }
   }
