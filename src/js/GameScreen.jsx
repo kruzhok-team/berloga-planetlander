@@ -98,7 +98,22 @@ class Game {
       () => Math.random() * 0.1 + 0.9,
     );
 
-    this.ship_image = ship_image;
+    //this.ship_image = ship_image;
+    this.ship = {
+      texture: ship_image,
+      position: { x: 18, y: 16 }, // Позиция на канвасе
+      scale: 0.1, // Масштаб (1 = 100% размера текстуры)
+      rotation: 0, // Угол поворота в градусах
+      collisionShape: {
+        type: "rectangle", // Или 'rectangle' для прямоугольной формы
+        //radius: 12, // Радиус (если круг)
+        width: 24, // Ширина (если прямоугольник)
+        height: 20, // Высота (если прямоугольник)
+      },
+    };
+
+    // Загрузка текстуры корабля
+    //ship.texture.src = "path/to/ship_image.png";
   }
 
   InitGraphics(N, M) {
@@ -180,7 +195,8 @@ class Game {
     });
     this.graphics.shipctx.scale(scale, scale);
 
-    this.DrawShip(this.graphics.shipctx, 18, 16);
+    //this.DrawShip(this.graphics.shipctx, 18, 16);
+    this.DrawShip(this.graphics.overlayctx, this.ship);
   }
 
   RoundRect(c, x, y, w, h, r) {
@@ -195,67 +211,21 @@ class Game {
     c.fill();
   }
 
-  DrawShip(c, x, y) {
-    c.drawImage(this.ship_image, x - 12, y - 12, 24, 20);
+  DrawShip(context, ship) {
+    const { texture, position, scale, rotation } = ship;
 
-    //c.drawImage(this.ship_image, x - 12, y - 12, 24, 20);
-
-    //c.fillStyle = "#E8EDEEFF";
-    //this.RoundRect(c, x - 12, y - 12, 24, 20, 5);
-    //
-    //c.fillStyle = "#B0B6BBFF";
-    //c.fillRect(x - 6, y - 15, 12, 3);
-    //c.fillRect(x - 6, y + 8, 12, 3);
-    //
-    //c.fillStyle = "#232C4DFF";
-    //c.fillRect(x - 6, y + 12, 12, 6);
-    //
-    //c.lineWidth = 2;
-    //c.strokeStyle = "#B0B6BBFF";
-    //c.beginPath();
-    //c.arc(x, y - 2, 5, 0, 2 * Math.PI);
-    //c.stroke();
-    //
-    //c.lineWidth = 1.5;
-    //c.strokeStyle = "#232C4DFF";
-    //c.beginPath();
-    //
-    ////---
-    //c.moveTo(x + 5, y + 12);
-    //c.lineTo(x + 15, y + 17);
-    //
-    //c.moveTo(x - 5, y + 12);
-    //c.lineTo(x - 15, y + 17);
-    //
-    //// ---
-    //c.moveTo(x + 5, y + 18);
-    //c.lineTo(x + 15, y + 17);
-    //
-    //c.moveTo(x - 5, y + 18);
-    //c.lineTo(x - 15, y + 17);
-    //
-    //// ---
-    //c.moveTo(x + 5, y + 18);
-    //c.lineTo(x + 16, y + 23);
-    //
-    //c.moveTo(x - 5, y + 18);
-    //c.lineTo(x - 16, y + 23);
-    //
-    //// ---
-    //c.moveTo(x + 15, y + 17);
-    //c.lineTo(x + 17, y + 23);
-    //
-    //c.moveTo(x - 15, y + 17);
-    //c.lineTo(x - 17, y + 23);
-    //
-    /////---
-    //c.moveTo(x + 17 - 3, y + 23);
-    //c.lineTo(x + 17 + 3, y + 23);
-    //
-    //c.moveTo(x - 17 - 3, y + 23);
-    //c.lineTo(x - 17 + 3, y + 23);
-    //
-    //c.stroke();
+    context.save();
+    context.translate(position.x, position.y);
+    context.rotate((rotation * Math.PI) / 180);
+    context.scale(scale, scale);
+    context.drawImage(
+      texture,
+      -texture.width / 2,
+      -texture.height / 2,
+      texture.width,
+      texture.height,
+    );
+    context.restore();
   }
 
   UpdateSVGOverlay(c) {
@@ -278,19 +248,19 @@ class Game {
   }
 
   CollisionDetection() {
-    let c = this.graphics.overlayctx;
-    c.clearRect(0, 0, this.graphics.N * 4, this.graphics.M * 4);
-    c.drawImage(this.graphics.collisioncanvas, 0, 0);
-    c.drawImage(
-      this.graphics.shipcanvas,
-      this.gameWasm._ShipGetX() * 4 - 18,
-      this.gameWasm._ShipGetY() * 4 - 20,
-    );
+    const { overlayctx, collisioncanvas } = this.graphics;
 
-    let newcollisioncounts = this.CountCollisionPixels(c);
+    // Очистить и отрисовать текущую ситуацию
+    overlayctx.clearRect(0, 0, this.graphics.N * 4, this.graphics.M * 4);
+    overlayctx.drawImage(collisioncanvas, 0, 0);
+    this.DrawShip(overlayctx, this.ship);
 
+    // Подсчет пикселей столкновения
+    const newCollisionCounts = this.CountCollisionPixels(overlayctx);
+
+    // Логика обработки столкновений
     if (
-      Math.abs(newcollisioncounts.boundary - this.collisionCounts.boundary) > 10
+      Math.abs(newCollisionCounts.boundary - this.collisionCounts.boundary) > 10
     ) {
       this.audio.ThrustOff();
       this.gameWasm._Destroyed();
@@ -299,7 +269,7 @@ class Game {
 
     if (
       Math.abs(
-        newcollisioncounts.landingpad - this.collisionCounts.landingpad,
+        newCollisionCounts.landingpad - this.collisionCounts.landingpad,
       ) > 10
     ) {
       this.audio.ThrustOff();
@@ -307,59 +277,55 @@ class Game {
         this.gameWasm._Destroyed();
       } else {
         console.log("YOU WIN");
-        // ТУТ ВРОДЕ КАК ЛОГИКА ПОБЕДЫ
         this.onWin();
-        //this.SetLevel();
       }
     }
   }
 
   Draw() {
-    let timeNow = Date.now();
+    const timeNow = Date.now();
 
+    // Обновление FPS
     if (timeNow - this.lastUpdateTime > 2000) {
       this.fps = (this.frames / (timeNow - this.lastUpdateTime)) * 1e3;
       this.lastUpdateTime = timeNow;
       this.frames = 0;
     }
 
-    for (let i = 0; i < this.graphics.N * this.graphics.M * 4; i++)
-      this.graphics.imagedata.data[i] = this.color[i];
+    // Отображение fluid canvas
+    const { fluidctx, imagedata } = this.graphics;
+    for (let i = 0; i < this.graphics.N * this.graphics.M * 4; i++) {
+      imagedata.data[i] = this.color[i];
+    }
+    fluidctx.putImageData(imagedata, 0, 0);
 
-    this.graphics.fluidctx.putImageData(this.graphics.imagedata, 0, 0);
-    console.log("Image data:", this.graphics.imagedata);
-
-    let c = this.graphics.overlayctx;
-    c.clearRect(0, 0, this.graphics.N * 4, this.graphics.M * 4);
-    c.drawImage(this.graphics.boundarycanvas, 0, 0);
+    // Отображение boundary и корабля
+    const { overlayctx, boundarycanvas } = this.graphics;
+    overlayctx.clearRect(0, 0, this.graphics.N * 4, this.graphics.M * 4);
+    overlayctx.drawImage(boundarycanvas, 0, 0);
 
     if (!this.gameWasm._IsExploded()) {
-      c.drawImage(
-        this.graphics.shipcanvas,
-        this.gameWasm._ShipGetX() * 4 - 18,
-        this.gameWasm._ShipGetY() * 4 - 20,
-      );
+      this.ship.position.x = this.gameWasm._ShipGetX() * 4;
+      this.ship.position.y = this.gameWasm._ShipGetY() * 4;
+      this.DrawShip(overlayctx, this.ship);
     }
-    this.UpdateSVGOverlay(c);
+
+    // Обновление SVG-оверлея
+    this.UpdateSVGOverlay(overlayctx);
   }
 
-  CountCollisionPixels(c) {
-    let boundarycount = 0;
-    let landingpadcount = 0;
-    let data = c.getImageData(0, 0, 1024, 512).data;
+  CountCollisionPixels(context) {
+    let boundaryCount = 0;
+    let landingPadCount = 0;
+    const data = context.getImageData(0, 0, 1024, 512).data;
+
     for (let i = 0; i < data.length; i += 4) {
-      if (data[i + 3] !== 0xff) continue; // alpha
-      landingpadcount += data[i + 1] === 0xff ? 1 : 0; // green color
-      boundarycount += data[i + 0] === 0xff ? 1 : 0; // red color
+      if (data[i + 3] !== 0xff) continue; // Проверка альфа-канала
+      landingPadCount += data[i + 1] === 0xff ? 1 : 0; // Зеленый цвет
+      boundaryCount += data[i + 0] === 0xff ? 1 : 0; // Красный цвет
     }
-    return { boundary: boundarycount, landingpad: landingpadcount };
-  }
 
-  StopGame() {
-    this.audio.Stop();
-    //this.audio.initialized = false;
-    this.audio.ThrustOff();
-    this.isRunning = false;
+    return { boundary: boundaryCount, landingpad: landingPadCount };
   }
 
   Loop(onLose) {
@@ -961,6 +927,13 @@ class Game {
         this.gameWasm._Reset(this.level, 0xff7070, 0xff7070, 0xa0a0a0, 128, 64);
         break;
     }
+  }
+
+  StopGame() {
+    this.audio.Stop();
+    //this.audio.initialized = false;
+    this.audio.ThrustOff();
+    this.isRunning = false;
   }
 }
 

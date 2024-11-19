@@ -18,7 +18,7 @@ int __attribute__((export_name("_GetColorOffset"))) GetColorOffset() {
 }
 
 void ColorInit(int N, int M) {
-  thrustcolor = RGB2Color(0xff2697de);
+  thrustcolor = RGB2Color(0xffe6ab2e);
   explosioncolorlow = RGB2Color(0xff0040FF);
   explosioncolorhigh = RGB2Color(0xff42FFFF);
   color = (int **)AllocArray(N, M);
