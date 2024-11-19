@@ -606,9 +606,17 @@ class Game {
     return n;
   }
 
-  DrawMap(c, level, color) {
+  DrawMap(c, level) {
+    const colors = [
+      { r: 63, g: 59, b: 83 }, // #3F3B53
+      { r: 103, g: 61, b: 81 }, // #673D51
+      { r: 70, g: 75, b: 102 }, // #464B66
+      { r: 112, g: 91, b: 106 }, // #705B6A
+    ];
+
     let offset = 68 * level;
-    for (let j = 0; j < 512; j++)
+
+    for (let j = 0; j < 512; j++) {
       for (let i = 0; i < 1024; i++) {
         let n = this.GetDensityMap(i, j, offset);
         let gradx = this.GetDensityMap(i + 1, j, offset) - n;
@@ -619,30 +627,72 @@ class Game {
         } else {
           rad = (gradx * 0.2) / rad;
         }
-        let col = 0.8 + rad;
-        if (col > 1.0) col = 1.0;
-        if (col < 0.0) col = 0.0;
 
-        c.fillStyle =
-          "rgb(" +
-          ((color.r * col) | 0) +
-          "," +
-          ((color.g * col) | 0) +
-          "," +
-          ((color.b * col) | 0) +
-          ")";
+        // Выбираем цвет в зависимости от плотности (n)
+        let col;
+        if (n > 2) {
+          col = 0; // #3F3B53
+        } else if (n > 2) {
+          col = 1; // #673D51
+        } else if (n > 1.3) {
+          col = 1; // #464B66
+        } else {
+          col = 3; // #705B6A
+        }
+
+        const color = colors[col];
+        c.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
 
         if (n > 1.5) {
           c.fillRect(i, j, 1, 1);
         } else if (n > 1.3 && (i & 7) === 0 && (j & 7) === 0) {
           c.translate(i, j);
-          //c.rotate(Math.random() * 2 * 3.141592);
-          c.rotate(i * j * n); // random value
+          // Добавляем случайную ориентацию
+          c.rotate((i * j * n) % (Math.PI * 2)); // случайное вращение
           c.fillRect(-8, -8, 1, 1);
           c.resetTransform();
         }
       }
+    }
   }
+
+  //DrawMap(c, level, color) {
+  //  let offset = 68 * level;
+  //  for (let j = 0; j < 512; j++)
+  //    for (let i = 0; i < 1024; i++) {
+  //      let n = this.GetDensityMap(i, j, offset);
+  //      let gradx = this.GetDensityMap(i + 1, j, offset) - n;
+  //      let grady = this.GetDensityMap(i, j + 1, offset) - n;
+  //      let rad = Math.sqrt(gradx * gradx + grady * grady);
+  //      if (rad < 0.0001) {
+  //        rad = 0;
+  //      } else {
+  //        rad = (gradx * 0.2) / rad;
+  //      }
+  //      let col = 0.8 + rad;
+  //      if (col > 1.0) col = 1.0;
+  //      if (col < 0.0) col = 0.0;
+  //
+  //      c.fillStyle =
+  //        "rgb(" +
+  //        ((color.r * col) | 0) +
+  //        "," +
+  //        ((color.g * col) | 0) +
+  //        "," +
+  //        ((color.b * col) | 0) +
+  //        ")";
+  //
+  //      if (n > 1.5) {
+  //        c.fillRect(i, j, 1, 1);
+  //      } else if (n > 1.3 && (i & 7) === 0 && (j & 7) === 0) {
+  //        c.translate(i, j);
+  //        //c.rotate(Math.random() * 2 * 3.141592);
+  //        c.rotate(i * j * n); // random value
+  //        c.fillRect(-8, -8, 1, 1);
+  //        c.resetTransform();
+  //      }
+  //    }
+  //}
 
   FillCenterText(c, str, y) {
     let x = 512 - 0.5 * c.measureText(str).width;
@@ -766,22 +816,12 @@ class Game {
 
   ResetLevel(level) {
     switch (level) {
-      case 0: // title
-        this.gameWasm._Reset(
-          this.level,
-          0xaf7070,
-          0x804040,
-          0xa0a0a0,
-          -1e3,
-          -1e3,
-        );
-        break;
       case 1:
         this.gameWasm._Reset(
           this.level,
           0x00ffffff,
           0x00ffffff,
-          0xff000000,
+          0xffeb8542,
           40,
           40,
         );
