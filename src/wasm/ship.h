@@ -1,19 +1,20 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-typedef struct
-{
-    float width, height;
+#include "utils.h"
 
-    float mass;
-    float J;
+typedef struct {
+  float width, height;
 
-    Vector r, v, f;
-    float phi, w, M;
+  float mass;
+  float J;
 
-    int isActive;
-    int isExploded;
-    float fuel;
+  Vector r, v, f;
+  float phi, w, M;
+
+  int isActive;
+  int isExploded;
+  float fuel;
 } Ship;
 
 extern Ship s;

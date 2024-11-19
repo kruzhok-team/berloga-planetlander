@@ -7,8 +7,62 @@ const GAME_PHASES = {
   DESTROY_WAINTING: 2,
 };
 
+const LEVELS = [
+  {
+    id: 1,
+    name: "Первый уровень",
+    background_image: "./images/background1.svg",
+    ship_image: "./images/ship.svg",
+  },
+  {
+    id: 2,
+    name: "Второй уровень",
+    background_image: "./images/background2.svg",
+    ship_image: "./ship_image.png",
+  },
+
+  {
+    id: 3,
+    name: "Третий уровень",
+    background_image: "./images/background3.svg",
+    ship_image: "./ship_image.png",
+  },
+
+  {
+    id: 4,
+    name: "Четвертый уровень",
+    background_image: "./images/background4.svg",
+    ship_image: "./ship_image.png",
+  },
+
+  {
+    id: 5,
+    name: "Пятый уровень",
+    background_image: "./images/background5.svg",
+    ship_image: "./ship_image.png",
+  },
+  {
+    id: 6,
+    name: "Шестой уровень",
+    background_image: "./images/background1.svg",
+    ship_image: "./ship_image.png",
+  },
+  {
+    id: 7,
+    name: "Седьмой уровень",
+    background_image: "./images/background2.svg",
+    ship_image: "./ship_image.png",
+  },
+  {
+    id: 8,
+    name: "Восьмой уровень",
+    background_image: "./images/background3.svg",
+    ship_image: "./ship_image.png",
+  },
+];
+
 class Game {
-  constructor(level, onLose, onWin, image, audio) {
+  constructor(level, onLose, onWin, image, audio, ship_image) {
     this.background_image = image;
     this.level = level;
     this.gamePhase = GAME_PHASES.PLAY;
@@ -43,6 +97,8 @@ class Game {
       { length: 17 * 32 },
       () => Math.random() * 0.1 + 0.9,
     );
+
+    this.ship_image = ship_image;
   }
 
   InitGraphics(N, M) {
@@ -69,8 +125,11 @@ class Game {
     });
 
     this.graphics.backcanvas = document.getElementById("backcanvas");
-    this.graphics.backcanvas.width = N;
-    this.graphics.backcanvas.height = M;
+    let scale = window.devicePixelRatio || 1;
+    this.graphics.backcanvas.width =
+      this.graphics.backcanvas.clientWidth * scale;
+    this.graphics.backcanvas.height =
+      this.graphics.backcanvas.clientHeight * scale;
     this.graphics.backctx = this.graphics.backcanvas.getContext("2d", {
       alpha: true,
     });
@@ -99,12 +158,27 @@ class Game {
       { alpha: true, willReadFrequently: true },
     );
 
+    //this.graphics.shipcanvas = document.createElement("canvas");
+    //this.graphics.shipcanvas.width = 36;
+    //this.graphics.shipcanvas.height = 40;
+    //this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
+    //alpha: true,
+    //});
+
     this.graphics.shipcanvas = document.createElement("canvas");
-    this.graphics.shipcanvas.width = 36;
-    this.graphics.shipcanvas.height = 40;
+    //let scale = window.devicePixelRatio || 1; // Учитываем устройство
+    this.graphics.shipcanvas.width = 36 * scale;
+    this.graphics.shipcanvas.height = 40 * scale;
+
+    // Устанавливаем CSS-стили для отображаемых размеров
+    this.graphics.shipcanvas.style.width = "36px";
+    this.graphics.shipcanvas.style.height = "40px";
+
+    // Получаем контекст и масштабируем его
     this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
       alpha: true,
     });
+    this.graphics.shipctx.scale(scale, scale);
 
     this.DrawShip(this.graphics.shipctx, 18, 16);
   }
@@ -122,62 +196,66 @@ class Game {
   }
 
   DrawShip(c, x, y) {
-    c.fillStyle = "#E8EDEEFF";
-    this.RoundRect(c, x - 12, y - 12, 24, 20, 5);
+    c.drawImage(this.ship_image, x - 12, y - 12, 24, 20);
 
-    c.fillStyle = "#B0B6BBFF";
-    c.fillRect(x - 6, y - 15, 12, 3);
-    c.fillRect(x - 6, y + 8, 12, 3);
+    //c.drawImage(this.ship_image, x - 12, y - 12, 24, 20);
 
-    c.fillStyle = "#232C4DFF";
-    c.fillRect(x - 6, y + 12, 12, 6);
-
-    c.lineWidth = 2;
-    c.strokeStyle = "#B0B6BBFF";
-    c.beginPath();
-    c.arc(x, y - 2, 5, 0, 2 * Math.PI);
-    c.stroke();
-
-    c.lineWidth = 1.5;
-    c.strokeStyle = "#232C4DFF";
-    c.beginPath();
-
-    //---
-    c.moveTo(x + 5, y + 12);
-    c.lineTo(x + 15, y + 17);
-
-    c.moveTo(x - 5, y + 12);
-    c.lineTo(x - 15, y + 17);
-
-    // ---
-    c.moveTo(x + 5, y + 18);
-    c.lineTo(x + 15, y + 17);
-
-    c.moveTo(x - 5, y + 18);
-    c.lineTo(x - 15, y + 17);
-
-    // ---
-    c.moveTo(x + 5, y + 18);
-    c.lineTo(x + 16, y + 23);
-
-    c.moveTo(x - 5, y + 18);
-    c.lineTo(x - 16, y + 23);
-
-    // ---
-    c.moveTo(x + 15, y + 17);
-    c.lineTo(x + 17, y + 23);
-
-    c.moveTo(x - 15, y + 17);
-    c.lineTo(x - 17, y + 23);
-
-    ///---
-    c.moveTo(x + 17 - 3, y + 23);
-    c.lineTo(x + 17 + 3, y + 23);
-
-    c.moveTo(x - 17 - 3, y + 23);
-    c.lineTo(x - 17 + 3, y + 23);
-
-    c.stroke();
+    //c.fillStyle = "#E8EDEEFF";
+    //this.RoundRect(c, x - 12, y - 12, 24, 20, 5);
+    //
+    //c.fillStyle = "#B0B6BBFF";
+    //c.fillRect(x - 6, y - 15, 12, 3);
+    //c.fillRect(x - 6, y + 8, 12, 3);
+    //
+    //c.fillStyle = "#232C4DFF";
+    //c.fillRect(x - 6, y + 12, 12, 6);
+    //
+    //c.lineWidth = 2;
+    //c.strokeStyle = "#B0B6BBFF";
+    //c.beginPath();
+    //c.arc(x, y - 2, 5, 0, 2 * Math.PI);
+    //c.stroke();
+    //
+    //c.lineWidth = 1.5;
+    //c.strokeStyle = "#232C4DFF";
+    //c.beginPath();
+    //
+    ////---
+    //c.moveTo(x + 5, y + 12);
+    //c.lineTo(x + 15, y + 17);
+    //
+    //c.moveTo(x - 5, y + 12);
+    //c.lineTo(x - 15, y + 17);
+    //
+    //// ---
+    //c.moveTo(x + 5, y + 18);
+    //c.lineTo(x + 15, y + 17);
+    //
+    //c.moveTo(x - 5, y + 18);
+    //c.lineTo(x - 15, y + 17);
+    //
+    //// ---
+    //c.moveTo(x + 5, y + 18);
+    //c.lineTo(x + 16, y + 23);
+    //
+    //c.moveTo(x - 5, y + 18);
+    //c.lineTo(x - 16, y + 23);
+    //
+    //// ---
+    //c.moveTo(x + 15, y + 17);
+    //c.lineTo(x + 17, y + 23);
+    //
+    //c.moveTo(x - 15, y + 17);
+    //c.lineTo(x - 17, y + 23);
+    //
+    /////---
+    //c.moveTo(x + 17 - 3, y + 23);
+    //c.lineTo(x + 17 + 3, y + 23);
+    //
+    //c.moveTo(x - 17 - 3, y + 23);
+    //c.lineTo(x - 17 + 3, y + 23);
+    //
+    //c.stroke();
   }
 
   UpdateSVGOverlay(c) {
@@ -594,7 +672,7 @@ class Game {
           c.translate(i, j);
           //c.rotate(Math.random() * 2 * 3.141592);
           c.rotate(i * j * n); // random value
-          c.fillRect(-8, -8, 16, 16);
+          c.fillRect(-8, -8, 1, 1);
           c.resetTransform();
         }
       }
@@ -699,7 +777,7 @@ class Game {
         break;
 
       case 1:
-        this.DrawMap(c, 0, { r: 0x40, g: 0xa0, b: 0x40 });
+        this.DrawMap(c, 0, { r: 0xb8, g: 0x69, b: 0x72 });
         c.clearRect(330, 120, 230, 30);
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(330, 140, 230, 10);
@@ -720,14 +798,14 @@ class Game {
         break;
 
       case 2:
-        this.DrawMap(c, 1, { r: 0x9d, g: 0x84, b: 0x20 });
+        this.DrawMap(c, 1, { r: 0xb8, g: 0x69, b: 0x72 });
         c.clearRect(550, 400, 180, 70);
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(550, 460, 180, 10);
         break;
 
       case 3: // dungeon
-        this.DrawMap(c, 2, { r: 0x21, g: 0x6b, b: 0x00 });
+        this.DrawMap(c, 2, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(150, 190, 90, 10);
         this.DrawBuilding(c, 80, 150, 65, 50);
@@ -740,14 +818,14 @@ class Game {
           c.arc(Math.random() * 1024, Math.random() * 512, 1, 0, 2 * Math.PI);
           c.fill();
         }
-        this.DrawMap(c, 3, { r: 0x10, g: 0x40, b: 0x30 });
+        this.DrawMap(c, 3, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.clearRect(320, 440, 100, 30);
         c.fillRect(320, 460, 100, 10);
         break;
 
       case 5: // waterfall
-        this.DrawMap(c, 4, { r: 0x51, g: 0x75, b: 0x07 });
+        this.DrawMap(c, 4, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(750, 290, 150, 10);
         this.DrawBuilding(c, 900, 250, 65, 50);
@@ -755,14 +833,14 @@ class Game {
         break;
 
       case 6:
-        this.DrawMap(c, 5, { r: 0x89, g: 0x89, b: 0x89 });
+        this.DrawMap(c, 5, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.clearRect(750, 80, 100, 30);
         c.fillRect(750, 110, 100, 10);
         break;
 
       case 7:
-        this.DrawMap(c, 6, { r: 0xf4, g: 0x8d, b: 0x4e });
+        this.DrawMap(c, 6, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         for (let i = 0; i < 50; i++) {
           let h = Math.random() * 250 + 50;
@@ -782,7 +860,7 @@ class Game {
 
       case 8:
         this.gameWasm._ShipSetActive();
-        this.DrawMap(c, 7, { r: 0x73, g: 0x9f, b: 0x2c });
+        this.DrawMap(c, 7, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(0, 490, 80, 10);
         break;
@@ -823,7 +901,7 @@ class Game {
           this.level,
           0x00ffffff,
           0x00ffffff,
-          0xffffffff,
+          0xff000000,
           40,
           40,
         );
@@ -889,32 +967,38 @@ class Game {
 const GameScreen = ({ levelNumber, onLose, onWin }) => {
   useEffect(() => {
     // Main(levelNumber, onLose);
+    let level = LEVELS.find((level) => level.id === levelNumber);
     let image = new Image();
-    image.src = "./backgroud.jpg";
+    image.src = level.background_image;
     image.onload = () => {
-      let audio = new AudioClass();
-      audio.Init();
-      let game = new Game(
-        levelNumber,
-        () => {
-          game.StopGame();
-          audio = null;
-          game = null;
-          onLose();
-        },
-        () => {
-          game.StopGame();
-          audio = null;
-          game = null;
-          onWin();
-          console.log(game);
-        },
-        image,
-        audio,
-      );
-      console.log("init", game);
-      game.Main(levelNumber, onLose);
-      console.log("main");
+      let ship = new Image();
+      ship.src = level.ship_image;
+      ship.onload = () => {
+        let audio = new AudioClass();
+        audio.Init();
+        let game = new Game(
+          levelNumber,
+          () => {
+            game.StopGame();
+            audio = null;
+            game = null;
+            onLose();
+          },
+          () => {
+            game.StopGame();
+            audio = null;
+            game = null;
+            onWin();
+            console.log(game);
+          },
+          image,
+          audio,
+          ship,
+        );
+        console.log("init", game);
+        game.Main(levelNumber, onLose);
+        console.log("main");
+      };
     };
   }, []);
 
