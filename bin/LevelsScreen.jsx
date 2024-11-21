@@ -100,7 +100,7 @@ const LevelScreen = ({ onLevelSelect }) => {
         height: "100vh",
         color: "white",
         textAlign: "center",
-        backgroundImage: 'url("main_background.png")',
+        backgroundImage: 'url("main_background.svg")',
         backgroundSize: "cover",
         backgroundPosition: "center",
         fontFamily: "Arial, sans-serif",
