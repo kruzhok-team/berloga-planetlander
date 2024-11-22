@@ -6,6 +6,7 @@ import LevelsScreen from "./LevelsScreen";
 import DefeatScreen from "./DefeatScreen";
 import AboutScreen from "./AboutScreen";
 import VictoryScreen from "./VictoryScreen";
+import CutsceneScreen from "./CutsceneScreen";
 
 const App = () => {
   const [screen, setScreen] = useState(0);
@@ -14,8 +15,11 @@ const App = () => {
   const StartStartScreen = () => {
     setScreen(0);
   };
-  const startGame = (levelId) => {
+  const startCutsceneScreen = (levelId) => {
     setLevelId(levelId);
+    setScreen(6);
+  };
+  const startGame = () => {
     setScreen(2);
   };
   const startLevels = () => {
@@ -36,7 +40,7 @@ const App = () => {
       {screen === 0 ? (
         <StartScreen onStart={startLevels} onAbout={startAboutScreen} />
       ) : screen === 1 ? (
-        <LevelsScreen onLevelSelect={startGame} />
+        <LevelsScreen onLevelSelect={startCutsceneScreen} />
       ) : screen === 2 ? (
         <GameScreen
           levelNumber={levelId}
@@ -51,8 +55,14 @@ const App = () => {
         <DefeatScreen onBackToMain={StartStartScreen} />
       ) : screen === 4 ? (
         <AboutScreen onBack={StartStartScreen} />
-      ) : (
+      ) : screen === 5 ? (
         <VictoryScreen onBackToMain={StartStartScreen} />
+      ) : (
+        <CutsceneScreen
+          level={levelId}
+          onBack={StartStartScreen}
+          onNext={startGame}
+        />
       )}
     </div>
   );

@@ -180,20 +180,38 @@ class Game {
     //alpha: true,
     //});
 
+    // Получаем устройство с учётом плотности пикселей
+    scale = window.devicePixelRatio || 1;
+
+    // Создаем канвас с улучшенным разрешением
     this.graphics.shipcanvas = document.createElement("canvas");
-    //let scale = window.devicePixelRatio || 1; // Учитываем устройство
-    this.graphics.shipcanvas.width = 36 * scale;
-    this.graphics.shipcanvas.height = 40 * scale;
+    this.graphics.shipcanvas.width = 72 * scale; // Увеличение физического разрешения
+    this.graphics.shipcanvas.height = 80 * scale; // Увеличение физического разрешения
 
-    // Устанавливаем CSS-стили для отображаемых размеров
-    this.graphics.shipcanvas.style.width = "36px";
-    this.graphics.shipcanvas.style.height = "40px";
+    // Устанавливаем CSS-стили для отображаемых размеров (размеры остаются 36x40)
+    this.graphics.shipcanvas.style.width = "36px"; // Отображаемые размеры
+    this.graphics.shipcanvas.style.height = "40px"; // Отображаемые размеры
 
-    // Получаем контекст и масштабируем его
+    // Получаем контекст и масштабируем его для работы с высоким разрешением
     this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
       alpha: true,
     });
-    this.graphics.shipctx.scale(scale, scale);
+    this.graphics.shipctx.scale(scale, scale); // Масштабируем контекст
+
+    //this.graphics.shipcanvas = document.createElement("canvas");
+    ////let scale = window.devicePixelRatio || 1; // Учитываем устройство
+    //this.graphics.shipcanvas.width = 36 * scale;
+    //this.graphics.shipcanvas.height = 40 * scale;
+    //
+    //// Устанавливаем CSS-стили для отображаемых размеров
+    //this.graphics.shipcanvas.style.width = "36px";
+    //this.graphics.shipcanvas.style.height = "40px";
+    //
+    //// Получаем контекст и масштабируем его
+    //this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
+    //  alpha: true,
+    //});
+    //this.graphics.shipctx.scale(scale, scale);
 
     //this.DrawShip(this.graphics.shipctx, 18, 16);
     this.DrawShip(this.graphics.overlayctx, this.ship);
@@ -581,6 +599,13 @@ class Game {
     }
   }
 
+  simpleNoise(x, y) {
+    // Простая формула на основе синусов
+    const sinX = Math.sin(x * 12.9898 + y * 78.233);
+    const sinY = Math.sin(x * 39.343 + y * 11.135);
+    return Math.sin(sinX + sinY);
+  }
+
   GetDensityMap(x, y, offset) {
     offset = offset | 0;
     let n = 0;
@@ -588,23 +613,58 @@ class Game {
     let i = Math.floor(x / 33) | 0;
     let j = Math.floor(y / 32) | 0;
 
-    for (let jj = j - 3; jj <= j + 3; jj++)
+    for (let jj = j - 3; jj <= j + 3; jj++) {
       for (let ii = i - 3; ii <= i + 3; ii++) {
-        if (jj < 0) continue;
-        if (ii < 0) continue;
-        if (jj >= 17) continue;
-        if (ii >= 32) continue;
+        if (jj < 0 || ii < 0 || jj >= 17 || ii >= 32) continue;
+
+        // Проверка на бит в карте
         if (
           ((this.maps[(ii >> 3) + jj * 4 + offset] >> (7 - (ii & 7))) & 1) ===
           0
         )
           continue;
 
+        // Расстояние от текущей точки до (ii, jj)
         let r = (x - ii * 33) * (x - ii * 33) + (y - jj * 32) * (y - jj * 32);
+
+        // Генерация псевдошума
+        //let noiseValue = this.simpleNoise(ii, jj);
+        let noiseValue = Math.random();
+        // Добавление шума в плотность
+        let noiseFactor = 1 + noiseValue; // Масштабируем шум
+
+        // Суммируем плотность с учетом шума
         n += Math.exp(-0.001 * r) * this.texture[jj * 32 + ii];
       }
+    }
+
     return n;
   }
+
+  //GetDensityMap(x, y, offset) {
+  //  offset = offset | 0;
+  //  let n = 0;
+  //
+  //  let i = Math.floor(x / 33) | 0;
+  //  let j = Math.floor(y / 32) | 0;
+  //
+  //  for (let jj = j - 3; jj <= j + 3; jj++)
+  //    for (let ii = i - 3; ii <= i + 3; ii++) {
+  //      if (jj < 0) continue;
+  //      if (ii < 0) continue;
+  //      if (jj >= 17) continue;
+  //      if (ii >= 32) continue;
+  //      if (
+  //        ((this.maps[(ii >> 3) + jj * 4 + offset] >> (7 - (ii & 7))) & 1) ===
+  //        0
+  //      )
+  //        continue;
+  //
+  //      let r = (x - ii * 33) * (x - ii * 33) + (y - jj * 32) * (y - jj * 32);
+  //      n += Math.exp(-0.001 * r) * this.texture[jj * 32 + ii];
+  //    }
+  //  return n;
+  //}
 
   DrawMap(c, level) {
     const colors = [
@@ -632,12 +692,12 @@ class Game {
         let col;
         if (n > 2) {
           col = 0; // #3F3B53
-        } else if (n > 2) {
-          col = 1; // #673D51
-        } else if (n > 1.3) {
-          col = 1; // #464B66
+        } else if (n > 1.7) {
+          col = 2; // #673D51
+        } else if (n > 1.5) {
+          col = 0; // #464B66
         } else {
-          col = 3; // #705B6A
+          col = 0; // #705B6A
         }
 
         const color = colors[col];
@@ -736,12 +796,12 @@ class Game {
         this.DrawMap(c, 0, { r: 0xb8, g: 0x69, b: 0x72 });
         c.clearRect(330, 120, 230, 30);
         c.fillStyle = "#FFFFFFFF";
-        c.fillRect(330, 140, 230, 10);
+        c.fillRect(330, 178, 230, 10);
         c.font = "20px Arial";
-        c.fillText("Посадочная платформа", 380, 170);
+        //c.fillText("Посадочная платформа", 380, 170);
         let data = c.getImageData(0, 0, 1024, 512).data;
-        this.DrawBuilding(c, 880, 200, 65, 200);
-        this.DrawBuilding(c, 840, 250, 25, 150);
+        //this.DrawBuilding(c, 880, 200, 65, 200);
+        //this.DrawBuilding(c, 840, 250, 25, 150);
         break;
 
       case 2:
@@ -755,7 +815,7 @@ class Game {
         this.DrawMap(c, 2, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(150, 190, 90, 10);
-        this.DrawBuilding(c, 80, 150, 65, 50);
+        //this.DrawBuilding(c, 80, 150, 65, 50);
         break;
 
       case 4:
@@ -775,8 +835,8 @@ class Game {
         this.DrawMap(c, 4, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(750, 290, 150, 10);
-        this.DrawBuilding(c, 900, 250, 65, 50);
-        this.DrawBuilding(c, 700, 200, 65, 100);
+        //this.DrawBuilding(c, 900, 250, 65, 50);
+        //this.DrawBuilding(c, 700, 200, 65, 100);
         break;
 
       case 6:
@@ -792,14 +852,14 @@ class Game {
         for (let i = 0; i < 50; i++) {
           let h = Math.random() * 250 + 50;
           let x = Math.random() * 1024;
-          if (x < 300 || x > 800) this.DrawBuilding(c, x, 500 - h, 35, h);
+          //if (x < 300 || x > 800) this.DrawBuilding(c, x, 500 - h, 35, h);
         }
         c.fillStyle = "#202020FF";
         c.fillRect(450, 410, 100, 90);
         c.fillStyle = "#202020FE";
         c.fillRect(430, 390, 140, 20);
 
-        this.DrawBuilding(c, 580, 450, 65, 40);
+        //this.DrawBuilding(c, 580, 450, 65, 40);
 
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(580, 450, 65, 10);
