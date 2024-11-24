@@ -546,8 +546,8 @@ class Game {
       this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey); // Передача ключей в WASM
     }
     if (event.code === "KeyS" || event.code === "ArrowDown") {
-      //this.dkey = v; // Установка ключа вниз
-      //this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey);
+      this.dkey = v; // Установка ключа вниз
+      this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey);
     }
     if (event.code === "KeyA" || event.code === "ArrowLeft") {
       this.lkey = v; // Установка ключа влево
