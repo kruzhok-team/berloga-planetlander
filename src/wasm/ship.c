@@ -7,7 +7,7 @@ float gravity = 0.5;
 
 void ShipInit(int x, int y) {
   s.mass = 1.;
-  s.width = 3;
+  s.width = 2;
   s.height = 4;
   s.J = 1. / 12. * s.mass * 4 * (s.width * s.width + s.height * s.height);
   s.r.x = x;
