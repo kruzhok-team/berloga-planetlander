@@ -49,8 +49,8 @@ const StartScreen = ({ onStart, onAbout }) => (
           fontSize: "2vw",
           fontWeight: "bold",
           padding: "2vh 3vw",
-          background: "linear-gradient(145deg, #4c435e, #B67C8A)",
-          //background: "linear-gradient(145deg, #48416b, #4c435e)",
+          //background: "linear-gradient(145deg, #4c435e, #B67C8A)",
+          background: "linear-gradient(145deg, #48416b, #4c435e)",
           color: "#fff",
           border: "none",
           borderRadius: "10px",
@@ -59,12 +59,12 @@ const StartScreen = ({ onStart, onAbout }) => (
         }}
         onMouseOver={(e) => {
           e.target.style.background =
-            "linear-gradient(145deg, #B67C8A, #4c435e)";
+            "linear-gradient(145deg, #4c435e, #48416b)";
           e.target.style.transform = "scale(1.05)";
         }}
         onMouseOut={(e) => {
           e.target.style.background =
-            "linear-gradient(145deg, #4c435e, #B67C8A)";
+            "linear-gradient(145deg, #48416b, #4c435e))";
           e.target.style.transform = "scale(1)";
         }}
       >
@@ -81,8 +81,8 @@ const StartScreen = ({ onStart, onAbout }) => (
           fontSize: "2vw",
           fontWeight: "bold",
           padding: "2vh 3vw",
-          background: "linear-gradient(145deg, #4c435e, #B67C8A)",
-          //background: "linear-gradient(145deg, #48416b, #4c435e)",
+          //background: "linear-gradient(145deg, #4c435e, #B67C8A)",
+          background: "linear-gradient(145deg, #48416b, #4c435e)",
           color: "#fff",
           border: "none",
           borderRadius: "10px",
@@ -91,14 +91,14 @@ const StartScreen = ({ onStart, onAbout }) => (
         }}
         onMouseOver={(e) => {
           e.target.style.background =
-            "linear-gradient(145deg, #B67C8A, #4c435e)";
-          //"linear-gradient(145deg, #4c435e, #48416b)";
+            //"linear-gradient(145deg, #B67C8A, #4c435e)";
+            "linear-gradient(145deg, #4c435e, #48416b)";
           e.target.style.transform = "scale(1.05)";
         }}
         onMouseOut={(e) => {
           e.target.style.background =
-            "linear-gradient(145deg, #4c435e, #B67C8A)";
-          //"linear-gradient(145deg, #48416b, #4c435e)";
+            //"linear-gradient(145deg, #4c435e, #B67C8A)";
+            "linear-gradient(145deg, #48416b, #4c435e)";
           e.target.style.transform = "scale(1)";
         }}
       >

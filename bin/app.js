@@ -40,7 +40,10 @@ const App = () => {
       {screen === 0 ? (
         <StartScreen onStart={startLevels} onAbout={startAboutScreen} />
       ) : screen === 1 ? (
-        <LevelsScreen onLevelSelect={startCutsceneScreen} />
+        <LevelsScreen
+          onLevelSelect={startCutsceneScreen}
+          onBack={StartStartScreen}
+        />
       ) : screen === 2 ? (
         <GameScreen
           levelNumber={levelId}

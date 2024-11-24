@@ -239,7 +239,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         justifyContent: "center",
         position: "relative",
       }}
-      onClick={handleNextText} // обработка клика для следующей реплики
+      //onClick={handleNextText} // обработка клика для следующей реплики
     >
       <div
         style={{
