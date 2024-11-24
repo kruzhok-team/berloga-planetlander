@@ -18,46 +18,53 @@ const LEVELS = [
     id: 2,
     name: "Второй уровень",
     background_image: "./images/background2.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
 
   {
     id: 3,
     name: "Третий уровень",
     background_image: "./images/background3.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
 
   {
     id: 4,
     name: "Четвертый уровень",
     background_image: "./images/background4.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
 
   {
     id: 5,
     name: "Пятый уровень",
     background_image: "./images/background5.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
   {
     id: 6,
     name: "Шестой уровень",
     background_image: "./images/background1.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
   {
     id: 7,
     name: "Седьмой уровень",
     background_image: "./images/background2.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
   {
     id: 8,
     name: "Восьмой уровень",
     background_image: "./images/background3.svg",
-    ship_image: "./ship_image.png",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
   },
 ];
 
@@ -107,7 +114,7 @@ class Game {
       collisionShape: {
         type: "rectangle", // Или 'rectangle' для прямоугольной формы
         //radius: 12, // Радиус (если круг)
-        width: 24, // Ширина (если прямоугольник)
+        width: 18, // Ширина (если прямоугольник)
         height: 20, // Высота (если прямоугольник)
       },
     };
@@ -339,12 +346,32 @@ class Game {
 
     for (let i = 0; i < data.length; i += 4) {
       if (data[i + 3] !== 0xff) continue; // Проверка альфа-канала
+
+      // Игнорируем белый цвет (корабль)
+      if (data[i] === 255 && data[i + 1] === 255 && data[i + 2] === 255) {
+        continue;
+      }
+
       landingPadCount += data[i + 1] === 0xff ? 1 : 0; // Зеленый цвет
       boundaryCount += data[i + 0] === 0xff ? 1 : 0; // Красный цвет
     }
 
     return { boundary: boundaryCount, landingpad: landingPadCount };
   }
+
+  //CountCollisionPixels(context) {
+  //  let boundaryCount = 0;
+  //  let landingPadCount = 0;
+  //  const data = context.getImageData(0, 0, 1024, 512).data;
+  //
+  //  for (let i = 0; i < data.length; i += 4) {
+  //    if (data[i + 3] !== 0xff) continue; // Проверка альфа-канала
+  //    landingPadCount += data[i + 1] === 0xff ? 1 : 0; // Зеленый цвет
+  //    boundaryCount += data[i + 0] === 0xff ? 1 : 0; // Красный цвет
+  //  }
+  //
+  //  return { boundary: boundaryCount, landingpad: landingPadCount };
+  //}
 
   Loop(onLose) {
     if (!this.isRunning) return;

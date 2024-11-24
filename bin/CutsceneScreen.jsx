@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const CutsceneScreen = ({ level, onBack, onNext }) => {
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [isTextTyping, setIsTextTyping] = useState(false);
-  const [displayedText, setDisplayedText] = useState("");
-  const [textIndex, setTextIndex] = useState(0);
+  //const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  //const [isTextTyping, setIsTextTyping] = useState(false);
+  //const [displayedText, setDisplayedText] = useState("");
+  //const [textIndex, setTextIndex] = useState(0);
 
   const cutscenes = [
     {
@@ -84,13 +84,25 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
 
   const currentCutscene = cutscenes.find((scene) => scene.level === level);
 
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [isTextTyping, setIsTextTyping] = useState(false);
+  const typingIntervalRef = useRef(null); // Хранение ссылки на текущий таймер
+
+  let charIndex = 0;
+
   // Функция для печати текста с эффектом набора
   const startTypingText = () => {
     setIsTextTyping(true);
-    let charIndex = 0;
+    charIndex = 0;
     const currentText = currentCutscene.text[currentTextIndex];
 
-    const typingInterval = setInterval(() => {
+    // Очищаем предыдущий таймер (если он был)
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+    }
+
+    typingIntervalRef.current = setInterval(() => {
       setDisplayedText((prevText) => {
         const nextChar = currentText[charIndex];
         charIndex += 1;
@@ -98,7 +110,8 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       });
 
       if (charIndex === currentText.length) {
-        clearInterval(typingInterval);
+        clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = null;
         setIsTextTyping(false);
       }
     }, 100);
@@ -110,18 +123,90 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       setDisplayedText("");
       startTypingText();
     }
+
+    // Очистка таймера при размонтировании компонента
+    return () => {
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
+    };
   }, [currentTextIndex]);
 
-  // Функция для перехода к следующей реплике
   const handleNextText = () => {
-    if (!isTextTyping) {
-      if (currentTextIndex < currentCutscene.text.length - 1) {
-        setCurrentTextIndex(currentTextIndex + 1);
-      } else {
-        onNext();
+    if (isTextTyping) {
+      // Если текст сейчас печатается, остановить таймер и завершить печать
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = null;
       }
+      setDisplayedText(currentCutscene.text[currentTextIndex]);
+      setIsTextTyping(false);
+    } else if (currentTextIndex < currentCutscene.text.length - 1) {
+      // Если текст завершен и есть следующая реплика
+      setCurrentTextIndex(currentTextIndex + 1);
+    } else {
+      // Если реплики закончились, выполнить onNext
+      onNext();
     }
   };
+
+  //let charIndex = 0;
+  //
+  //// Функция для печати текста с эффектом набора
+  //const startTypingText = () => {
+  //  setIsTextTyping(true);
+  //  charIndex = 0;
+  //  const currentText = currentCutscene.text[currentTextIndex];
+  //
+  //  const typingInterval = setInterval(() => {
+  //    setDisplayedText((prevText) => {
+  //      const nextChar = currentText[charIndex];
+  //      charIndex += 1;
+  //      return prevText + nextChar;
+  //    });
+  //
+  //    if (charIndex === currentText.length) {
+  //      clearInterval(typingInterval);
+  //      setIsTextTyping(false);
+  //    }
+  //  }, 100);
+  //};
+  //
+  //// Используем useEffect для начала печати текста при смене индекса реплики
+  //useEffect(() => {
+  //  if (currentTextIndex < currentCutscene.text.length) {
+  //    setDisplayedText("");
+  //    startTypingText();
+  //  }
+  //}, [currentTextIndex]);
+  //
+  //const handleNextText = () => {
+  //  if (isTextTyping) {
+  //    // Если текст сейчас печатается, остановить таймер и завершить печать
+  //    setDisplayedText(currentCutscene.text[currentTextIndex]);
+  //    setIsTextTyping(false);
+  //    charIndex = currentCutscene.text[currentTextIndex].length;
+  //  } else if (currentTextIndex < currentCutscene.text.length - 1) {
+  //    // Если текст завершен и есть следующая реплика
+  //    setCurrentTextIndex(currentTextIndex + 1);
+  //    setIsTextTyping(true);
+  //    setDisplayedText(""); // Очистить для печати следующей реплики
+  //  } else {
+  //    // Если реплики закончились, выполнить onNext
+  //    onNext();
+  //  }
+  //};
+
+  // Функция для перехода к следующей реплике
+  //const handleNextText = () => {
+  //  if (!isTextTyping) {
+  //    if (currentTextIndex < currentCutscene.text.length - 1) {
+  //      setCurrentTextIndex(currentTextIndex + 1);
+  //    } else {
+  //      onNext();
+  //    }
+  //  }
+  //};
 
   // Обрабатываем нажатие клавиши для перехода к следующей реплике
   useEffect(() => {
