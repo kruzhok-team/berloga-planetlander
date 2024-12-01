@@ -4,7 +4,7 @@ const levelsData = [
   {
     id: 1,
     name: "Уровень 1",
-    x: 100,
+    x: 500,
     y: 500,
     children: [2],
     image: "image1.png",
@@ -12,48 +12,48 @@ const levelsData = [
   {
     id: 2,
     name: "Уровень 2",
-    x: 200,
-    y: 400,
+    x: 600,
+    y: 450,
     children: [3],
     image: "image2.png",
   },
   {
     id: 3,
     name: "Уровень 3",
-    x: 200,
-    y: 600,
+    x: 675,
+    y: 525,
     children: [4],
     image: "image3.png",
   },
   {
     id: 4,
     name: "Уровень 4",
-    x: 300,
-    y: 400,
+    x: 775,
+    y: 575,
     children: [5],
     image: "image4.png",
   },
   {
     id: 5,
     name: "Уровень 5",
-    x: 300,
-    y: 600,
+    x: 900,
+    y: 575,
     children: [6],
     image: "image5.png",
   },
   {
     id: 6,
     name: "Уровень 6",
-    x: 400,
-    y: 400,
+    x: 875,
+    y: 700,
     children: [7],
     image: "image6.png",
   },
   {
     id: 7,
     name: "Уровень 7",
-    x: 400,
-    y: 600,
+    x: 800,
+    y: 675,
     children: [8],
     image: "image7.png",
   },
@@ -124,11 +124,13 @@ const LevelScreen = ({ onLevelSelect, onBack }) => {
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 800 800" // Задаем фиксированный размер для точной центровки
-          style={{
-            maxWidth: "800px", // Ограничиваем максимальную ширину SVG
-            maxHeight: "800px", // Ограничиваем максимальную высоту SVG
-          }}
+          //viewBox="0 0 800 800" // Задаем фиксированный размер для точной центровки
+          style={
+            {
+              //maxWidth: "800px", // Ограничиваем максимальную ширину SVG
+              //maxHeight: "800px", // Ограничиваем максимальную высоту SVG
+            }
+          }
         >
           {levelsData.map((level) => {
             const isActive = level.id === activeLevelId;

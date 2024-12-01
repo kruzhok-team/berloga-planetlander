@@ -410,12 +410,12 @@ class Game {
           window.setTimeout(() => {
             this.gamePhase = GAME_PHASES.PLAY;
             this.onLose(); // Вызываем onLose, если корабли закончились
-          }, 5000);
+          }, 2000);
         } else {
           window.setTimeout(() => {
             this.gamePhase = GAME_PHASES.PLAY;
             this.SetLevel(); // Устанавливаем уровень
-          }, 5000);
+          }, 2000);
         }
       }
     }

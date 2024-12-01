@@ -1,14 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const CutsceneScreen = ({ level, onBack, onNext }) => {
-  //const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  //const [isTextTyping, setIsTextTyping] = useState(false);
-  //const [displayedText, setDisplayedText] = useState("");
-  //const [textIndex, setTextIndex] = useState(0);
-
   const cutscenes = [
     {
       level: 1,
+      text: [
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Привет, пилот! Я капитан Костя, буду помогать тебе и направлять на миссии. А это бортовой копъютер, будет сопроваждать тебя на миссиях",
+        },
+        {
+          character: "Бортовой компъютер",
+          imageUrl: "./images/bort.png",
+          text: "Добрый день!",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Приятно познакомиться!",
+        },
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Сейчас мы находимся на планете Берлога, нашей родине. Здесь ты опробуешь свой корабль, на котором будешь доставлять посылки!",
+        },
+        {
+          character: "Бортовой компъютер",
+          imageUrl: "./images/bort.png",
+          text: "Берлога - это планета типа суперземля (то есть её масса больше массы Земли, но меньше массы Нептуна), по своему развитию сходна с поздним каменноугольным периодом Земли. При этом состав планеты умеренно металлический, поэтому на поверхности нет сверхтяжести.",
+        },
+      ],
+    },
+    {
+      level: 2,
       text: [
         {
           character: "Капитан Костя",
@@ -38,29 +63,134 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       ],
     },
     {
-      level: 2,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
-    },
-
-    {
       level: 3,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+      text: [
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Следующий пункт доставки находится в опасной зоне. Гравитация всё та же — сильная, а препятствия стали более сложными.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Мой корабль тяжело разгоняется на этой планете.",
+        },
+        {
+          character: "Бортовой компьютер",
+          imageUrl: "./images/bort.png",
+          text: "Это из-за ускорения. Сильная гравитация увеличивает нагрузку на двигатель. Используй короткие импульсы тяги и разгоняйся постепенно.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "И следить за топливом, как всегда.",
+        },
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Верно. Не сдавайся, пилот. У тебя получится!",
+        },
+      ],
     },
     {
       level: 4,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+      text: [
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Добро пожаловать на планету - Цетос. Несколько следующих миссий будут проходить здесь.",
+        },
+        {
+          character: "Бортовой компъютер",
+          imageUrl: "./images/bort.png",
+          text: "Цетос - суперпланета “берложного” типа, пока не пригодная к свободной жизни медведей на поверхности. Средняя температура -3 °C , 1 год длится 9488 земных лет, 1 день длится 98 часов. На планете есть озеро глубиной 1533 км и другие гигантские природные объекты. Прямо сейчас защищенная колония медведей занята исследованиям Цетоса для разработки программы его берлогоформирования.",
+        },
+      ],
     },
     {
       level: 5,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+      text: [
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Здесь гравитация слабее, чем на Берлоге. Это поможет тебе более точно маневрировать, но и ошибок допускать нельзя.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Чувствую, что корабль стал легче управляться. Почему так?",
+        },
+        {
+          character: "Бортовой компьютер",
+          imageUrl: "./images/bort.png",
+          text: "Гравитация на Цетосе — всего 0.5 м/с². Это означает, что сила, тянущая корабль вниз, уменьшилась, и ты можешь легче корректировать траекторию.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Но, наверное, это же делает торможение более сложным?",
+        },
+        {
+          character: "Бортовой компьютер",
+          imageUrl: "./images/bort.png",
+          text: "Именно. На планетах с низкой гравитацией корабль сохраняет скорость дольше. Планируй остановки заранее.",
+        },
+        {
+          character: "Капитан Костя",
+          text: "Держи курс, пилот. Этот груз ждут с нетерпением.",
+          imageUrl: "./images/captain.png",
+        },
+      ],
     },
     {
       level: 6,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+      text: [
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Доставить груз в каньоне — задача не из лёгких. Здесь придётся учитывать не только гравитацию, но и инерцию. Тебе нужно полностью понять, как она работает.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Инерция... это когда корабль продолжает двигаться, даже если я выключил двигатели?",
+        },
+        {
+          character: "Бортовой компьютер",
+          imageUrl: "./images/bort.png",
+          text: "Точно. Инерция — это свойство тела сохранять свою скорость, пока на него не действует внешняя сила. В нашем случае, если ты летишь вперёд, корабль будет двигаться, пока его не замедлит сила, вроде гравитации или твоих манёвров.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Понял. Чем выше скорость, тем труднее остановиться?",
+        },
+        {
+          character: "Бортовой компьютер",
+          imageUrl: "./images/bort.png",
+          text: "Да. Учитывай это, особенно в узких местах каньона. Ты можешь использовать инерцию для экономии топлива: разогнаться, выключить тягу и двигаться вперёд за счёт накопленной скорости. Начинай тормозить заранее, чтобы избежать столкновений.",
+        },
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Пилот, это не только о доставке груза, но и о твоём мастерстве. Удачи.",
+        },
+      ],
     },
     {
       level: 7,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+      text: [
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Добро пожаловать на планету Тетис!",
+        },
+        {
+          character: "Бортовой компъютер",
+          imageUrl: "./images/captain.png",
+          text: "Тетис - одна из хорошо исследованных медведями планет. Кротовые норы выводят путешественников прямо в теплое мелководье. В основном это водный мир. Уместны отсылки на страстную любовь медведей к рыбной ловле. Атоллы и крупные острова хорошо известны медведям и уже застроены, суперконтинент пока не изучен. Океан населён крупными рептилиями и рыбами. Многие медведи любят проводить здесь отпуск, развлекая себя рыбалкой.",
+        },
+      ],
     },
     {
       level: 8,
@@ -76,17 +206,15 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
   const typingIntervalRef = useRef(null);
   const [currentReplic, setCurrentReplic] = useState(
     currentCutscene.text[currentTextIndex],
-  ); // Хранение ссылки на текущий таймер
+  );
 
   let charIndex = 0;
 
-  // Функция для печати текста с эффектом набора
   const startTypingText = () => {
     setIsTextTyping(true);
     charIndex = 0;
-    const currentText = currentCutscene.text[currentTextIndex].text;
+    const currentText = currentReplic.text;
 
-    // Очищаем предыдущий таймер (если он был)
     if (typingIntervalRef.current) {
       clearInterval(typingIntervalRef.current);
     }
@@ -106,14 +234,12 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
     }, 100);
   };
 
-  // Используем useEffect для начала печати текста при смене индекса реплики
   useEffect(() => {
     if (currentTextIndex < currentCutscene.text.length) {
       setDisplayedText("");
       startTypingText();
     }
 
-    // Очистка таймера при размонтировании компонента
     return () => {
       if (typingIntervalRef.current) {
         clearInterval(typingIntervalRef.current);
@@ -123,82 +249,20 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
 
   const handleNextText = () => {
     if (isTextTyping) {
-      // Если текст сейчас печатается, остановить таймер и завершить печать
       if (typingIntervalRef.current) {
         clearInterval(typingIntervalRef.current);
         typingIntervalRef.current = null;
       }
-      setDisplayedText(currentCutscene.text[currentTextIndex].text);
+      setDisplayedText(currentReplic.text);
       setIsTextTyping(false);
     } else if (currentTextIndex < currentCutscene.text.length - 1) {
-      // Если текст завершен и есть следующая реплика
+      setCurrentReplic(currentCutscene.text[currentTextIndex + 1]);
       setCurrentTextIndex(currentTextIndex + 1);
-      setCurrentReplic(currentTextIndex);
     } else {
-      // Если реплики закончились, выполнить onNext
       onNext();
     }
   };
 
-  //let charIndex = 0;
-  //
-  //// Функция для печати текста с эффектом набора
-  //const startTypingText = () => {
-  //  setIsTextTyping(true);
-  //  charIndex = 0;
-  //  const currentText = currentCutscene.text[currentTextIndex];
-  //
-  //  const typingInterval = setInterval(() => {
-  //    setDisplayedText((prevText) => {
-  //      const nextChar = currentText[charIndex];
-  //      charIndex += 1;
-  //      return prevText + nextChar;
-  //    });
-  //
-  //    if (charIndex === currentText.length) {
-  //      clearInterval(typingInterval);
-  //      setIsTextTyping(false);
-  //    }
-  //  }, 100);
-  //};
-  //
-  //// Используем useEffect для начала печати текста при смене индекса реплики
-  //useEffect(() => {
-  //  if (currentTextIndex < currentCutscene.text.length) {
-  //    setDisplayedText("");
-  //    startTypingText();
-  //  }
-  //}, [currentTextIndex]);
-  //
-  //const handleNextText = () => {
-  //  if (isTextTyping) {
-  //    // Если текст сейчас печатается, остановить таймер и завершить печать
-  //    setDisplayedText(currentCutscene.text[currentTextIndex]);
-  //    setIsTextTyping(false);
-  //    charIndex = currentCutscene.text[currentTextIndex].length;
-  //  } else if (currentTextIndex < currentCutscene.text.length - 1) {
-  //    // Если текст завершен и есть следующая реплика
-  //    setCurrentTextIndex(currentTextIndex + 1);
-  //    setIsTextTyping(true);
-  //    setDisplayedText(""); // Очистить для печати следующей реплики
-  //  } else {
-  //    // Если реплики закончились, выполнить onNext
-  //    onNext();
-  //  }
-  //};
-
-  // Функция для перехода к следующей реплике
-  //const handleNextText = () => {
-  //  if (!isTextTyping) {
-  //    if (currentTextIndex < currentCutscene.text.length - 1) {
-  //      setCurrentTextIndex(currentTextIndex + 1);
-  //    } else {
-  //      onNext();
-  //    }
-  //  }
-  //};
-
-  // Обрабатываем нажатие клавиши для перехода к следующей реплике
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "Enter") {
@@ -229,7 +293,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         justifyContent: "center",
         position: "relative",
       }}
-      //onClick={handleNextText} // обработка клика для следующей реплики
     >
       <div
         style={{
@@ -240,7 +303,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
           gap: "20px",
         }}
       >
-        {/* Кат-сцена */}
         <div
           style={{
             display: "flex",
@@ -248,7 +310,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
             width: "100%",
           }}
         >
-          {/* Карточка с репликой и изображением */}
           <div
             style={{
               flex: 1,
@@ -276,7 +337,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
             </p>
           </div>
 
-          {/* Изображение медведя */}
           <div
             style={{
               flex: 1,
@@ -299,7 +359,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         </div>
       </div>
 
-      {/* Контейнер для кнопок */}
       <div
         style={{
           display: "flex",
@@ -309,7 +368,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
           marginTop: "20px", // Отступ сверху для кнопок
         }}
       >
-        {/* Кнопка Назад */}
         <button
           onClick={onBack}
           style={{
