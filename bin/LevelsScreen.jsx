@@ -6,7 +6,7 @@ const levelsData = [
     name: "Уровень 1",
     x: 100,
     y: 500,
-    children: [2, 3],
+    children: [2],
     image: "image1.png",
   },
   {
@@ -14,7 +14,7 @@ const levelsData = [
     name: "Уровень 2",
     x: 200,
     y: 400,
-    children: [4],
+    children: [3],
     image: "image2.png",
   },
   {
@@ -22,7 +22,7 @@ const levelsData = [
     name: "Уровень 3",
     x: 200,
     y: 600,
-    children: [5],
+    children: [4],
     image: "image3.png",
   },
   {
@@ -30,7 +30,7 @@ const levelsData = [
     name: "Уровень 4",
     x: 300,
     y: 400,
-    children: [6],
+    children: [5],
     image: "image4.png",
   },
   {
@@ -38,7 +38,7 @@ const levelsData = [
     name: "Уровень 5",
     x: 300,
     y: 600,
-    children: [7],
+    children: [6],
     image: "image5.png",
   },
   {
@@ -46,7 +46,7 @@ const levelsData = [
     name: "Уровень 6",
     x: 400,
     y: 400,
-    children: [],
+    children: [7],
     image: "image6.png",
   },
   {

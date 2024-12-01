@@ -301,7 +301,6 @@ class Game {
       if (this.gameWasm._ShipGetVY() > 2) {
         this.gameWasm._Destroyed();
       } else {
-        console.log("YOU WIN");
         this.onWin();
       }
     }
@@ -330,8 +329,10 @@ class Game {
     overlayctx.drawImage(boundarycanvas, 0, 0);
 
     if (!this.gameWasm._IsExploded()) {
+      //console.log(this.gameWasm._ShipGetAngle());
       this.ship.position.x = this.gameWasm._ShipGetX() * 4;
       this.ship.position.y = this.gameWasm._ShipGetY() * 4;
+      //this.ship.rotation = this.gameWasm._ShipGetAngle();
       this.DrawShip(overlayctx, this.ship);
     }
 
@@ -480,7 +481,6 @@ class Game {
     }
     collisionctx.putImageData(collisionimage, 0, 0);
     this.collisionCounts = this.CountCollisionPixels(collisionctx);
-    console.log(this.collisionCounts);
     this.gameWasm._FixCells();
   }
 
@@ -527,7 +527,6 @@ class Game {
   }
 
   onkey(event, v) {
-    console.log("'", event.code, "'", event.key, "'"); // Логирование нажатой клавиши
     if (v && event.code === "Space") {
       this.audio.EnableDisable(); // Включение/выключение аудио
       return;
@@ -542,7 +541,6 @@ class Game {
     // Обработка нажатий клавиш
     if (event.code === "KeyW" || event.code === "ArrowUp") {
       this.ukey = v; // Установка ключа вверх
-      console.log("W key pressed", this.ukey); // Логирование состояния
       this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey); // Передача ключей в WASM
     }
     if (event.code === "KeyS" || event.code === "ArrowDown") {
@@ -1034,15 +1032,12 @@ const GameScreen = ({ levelNumber, onLose, onWin }) => {
             audio = null;
             game = null;
             onWin();
-            console.log(game);
           },
           image,
           audio,
           ship,
         );
-        console.log("init", game);
         game.Main(levelNumber, onLose);
-        console.log("main");
       };
     };
   }, []);

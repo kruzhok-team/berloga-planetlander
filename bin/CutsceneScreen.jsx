@@ -9,76 +9,62 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
   const cutscenes = [
     {
       level: 1,
-      character: "Медведь 1",
       text: [
-        "Привет, команда! Мы готовы начать доставку на этом уровне.",
-        "Смотрите, какое красивое место для посадки! Нужно быть осторожными.",
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Берлога славится своей тяжёлой атмосферой. Здесь гравитация сильнее обычного, так что будь готов, пилот. Тебе нужно доставить груз на соседнюю площадку.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Что значит 'сильная гравитация'?",
+        },
+        {
+          character: "Бортовой компъютер",
+          imageUrl: "./images/bort.png",
+          text: "Гравитация на Берлоге — 0.9 м/с². Это почти в два раза больше, чем на других планетах. Она постоянно тянет корабль вниз, и тебе потребуется больше тяги двигателя, чтобы компенсировать её.",
+        },
+        {
+          character: "Пилот",
+          imageUrl: "./images/pilot.png",
+          text: "Понял. Придётся быть аккуратнее с топливом.",
+        },
+        {
+          character: "Капитан Костя",
+          imageUrl: "./images/captain.png",
+          text: "Именно так! Удачи!",
+        },
       ],
-      imageUrl: "placeholder_bear1.png",
     },
     {
       level: 2,
-      character: "Медведь 2",
-      text: [
-        "Эта планета опасна! Нужно аккуратно двигаться.",
-        "Не забывайте следить за уровнем топлива!",
-      ],
-      imageUrl: "placeholder_bear2.png",
-    },
-    {
-      level: 3,
-      character: "Медведь 3",
-      text: [
-        "Мы уже близко к финишу! Но путь будет сложным.",
-        "Не упустите шанс заработать дополнительные очки!",
-      ],
-      imageUrl: "placeholder_bear3.png",
-    },
-    {
-      level: 4,
-      character: "Медведь 3",
-      text: [
-        "Мы уже близко к финишу! Но путь будет сложным.",
-        "Не упустите шанс заработать дополнительные очки!",
-      ],
-      imageUrl: "placeholder_bear3.png",
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
     },
 
     {
+      level: 3,
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+    },
+    {
+      level: 4,
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
+    },
+    {
       level: 5,
-      character: "Медведь 3",
-      text: [
-        "Мы уже близко к финишу! Но путь будет сложным.",
-        "Не упустите шанс заработать дополнительные очки!",
-      ],
-      imageUrl: "placeholder_bear3.png",
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
     },
     {
       level: 6,
-      character: "Медведь 3",
-      text: [
-        "Мы уже близко к финишу! Но путь будет сложным.",
-        "Не упустите шанс заработать дополнительные очки!",
-      ],
-      imageUrl: "placeholder_bear3.png",
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
     },
     {
       level: 7,
-      character: "Медведь 3",
-      text: [
-        "Мы уже близко к финишу! Но путь будет сложным.",
-        "Не упустите шанс заработать дополнительные очки!",
-      ],
-      imageUrl: "placeholder_bear3.png",
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
     },
     {
       level: 8,
-      character: "Медведь 3",
-      text: [
-        "Мы уже близко к финишу! Но путь будет сложным.",
-        "Не упустите шанс заработать дополнительные очки!",
-      ],
-      imageUrl: "placeholder_bear3.png",
+      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
     },
   ];
 
@@ -87,7 +73,10 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isTextTyping, setIsTextTyping] = useState(false);
-  const typingIntervalRef = useRef(null); // Хранение ссылки на текущий таймер
+  const typingIntervalRef = useRef(null);
+  const [currentReplic, setCurrentReplic] = useState(
+    currentCutscene.text[currentTextIndex],
+  ); // Хранение ссылки на текущий таймер
 
   let charIndex = 0;
 
@@ -95,7 +84,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
   const startTypingText = () => {
     setIsTextTyping(true);
     charIndex = 0;
-    const currentText = currentCutscene.text[currentTextIndex];
+    const currentText = currentCutscene.text[currentTextIndex].text;
 
     // Очищаем предыдущий таймер (если он был)
     if (typingIntervalRef.current) {
@@ -139,11 +128,12 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         clearInterval(typingIntervalRef.current);
         typingIntervalRef.current = null;
       }
-      setDisplayedText(currentCutscene.text[currentTextIndex]);
+      setDisplayedText(currentCutscene.text[currentTextIndex].text);
       setIsTextTyping(false);
     } else if (currentTextIndex < currentCutscene.text.length - 1) {
       // Если текст завершен и есть следующая реплика
       setCurrentTextIndex(currentTextIndex + 1);
+      setCurrentReplic(currentTextIndex);
     } else {
       // Если реплики закончились, выполнить onNext
       onNext();
@@ -277,7 +267,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
                 marginBottom: "10px",
               }}
             >
-              {currentCutscene.character}
+              {currentReplic.character}
             </h2>
             <p
               style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}
@@ -301,7 +291,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
             }}
           >
             <img
-              src={currentCutscene.imageUrl}
+              src={currentReplic.imageUrl}
               alt="Медведь"
               style={{ maxWidth: "100%", borderRadius: "10px" }}
             />

@@ -100,7 +100,7 @@ void Thrust(int x, int y, float sx, float sy) {
       for (int i = x - 3; i < x + 3; i++) {
         if (!IsInside(j - 6, i))
           continue;
-        float r2 = (i - sx) * (i - sx) + (j - sy) * (j - s.r.y);
+        float r2 = (i - sx) * (i - sx) + (j - sy) * (j - sy);
         density1[j - 6][i] += dt * expf_fast(-r2 * 1.f) * 10.;
         vy[j - 6][i] -= dt * expf_fast(-r2 * 1.f) * 1.;
       }
@@ -121,8 +121,8 @@ void Thrust(int x, int y, float sx, float sy) {
         if (!IsInside(j, i - 6))
           continue;
         float r2 = (i - sx) * (i - sx) + (j - sy) * (j - sy);
-        density1[j + 3][i - 3] += dt * expf_fast(-r2 * 1.f) * 10.;
-        vx[j + 3][i - 3] -= dt * expf_fast(-r2 * 1.f) * 1.;
+        density1[j][i - 3] += dt * expf_fast(-r2 * 1.f) * 10.;
+        vx[j][i - 3] -= dt * expf_fast(-r2 * 1.f) * 1.;
       }
 }
 
