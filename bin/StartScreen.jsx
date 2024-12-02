@@ -27,7 +27,7 @@ const StartScreen = ({ onStart, onAbout }) => (
         textAlign: "center",
       }}
     >
-      Interplanetary Postal Service
+      Межпланетная почтовая служба
     </p>
     <div
       style={{
