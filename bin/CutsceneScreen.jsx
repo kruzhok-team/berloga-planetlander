@@ -83,7 +83,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       ],
     },
     {
-      level: 3,
+      level: 4,
       text: [
         {
           character: "Капитан Костя",
@@ -113,7 +113,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       ],
     },
     {
-      level: 4,
+      level: 5,
       text: [
         {
           character: "Капитан Костя",
@@ -128,7 +128,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       ],
     },
     {
-      level: 5,
+      level: 6,
       text: [
         {
           character: "Капитан Костя",
@@ -163,7 +163,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       ],
     },
     {
-      level: 6,
+      level: 7,
       text: [
         {
           character: "Капитан Костя",
@@ -198,7 +198,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
       ],
     },
     {
-      level: 7,
+      level: 8,
       text: [
         {
           character: "Капитан Костя",
@@ -211,10 +211,6 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
           text: "Тетис - одна из хорошо исследованных медведями планет. Кротовые норы выводят путешественников прямо в теплое мелководье. В основном это водный мир. Уместны отсылки на страстную любовь медведей к рыбной ловле. Атоллы и крупные острова хорошо известны медведям и уже застроены, суперконтинент пока не изучен. Океан населён крупными рептилиями и рыбами. Многие медведи любят проводить здесь отпуск, развлекая себя рыбалкой.",
         },
       ],
-    },
-    {
-      level: 8,
-      text: [{ character: "char", imageUrl: "bear.png", text: "adawdaw" }],
     },
   ];
 
