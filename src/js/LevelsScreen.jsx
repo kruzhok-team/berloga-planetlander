@@ -62,7 +62,7 @@ const levelsData = [
     name: "Тетис",
     x: 800,
     y: 675,
-    children: [4],
+    children: [5],
     image: "image7.png",
   },
 ];

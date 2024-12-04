@@ -27,7 +27,7 @@ const StartScreen = ({ onStart, onAbout }) => (
         textAlign: "center",
       }}
     >
-      Межпланетная почтовая служба
+      Межпланетная почта
     </p>
     <div
       style={{
