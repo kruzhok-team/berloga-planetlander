@@ -7,7 +7,7 @@ const AboutScreen = ({ onBack }) => (
       height: "100vh",
       color: "white",
       textAlign: "center",
-      backgroundImage: 'url("main_background.svg")',
+      backgroundImage: 'url("main_background.png")',
       backgroundSize: "cover",
       backgroundPosition: "center",
       fontFamily: "Arial, sans-serif",
@@ -42,7 +42,7 @@ const AboutScreen = ({ onBack }) => (
         <h2
           style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "10px" }}
         >
-          Moonlander
+          Межпланетная почта
         </h2>
         <p style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}>
           Вы медведь - сотрудник межпланетной службы доставки. В вашем
