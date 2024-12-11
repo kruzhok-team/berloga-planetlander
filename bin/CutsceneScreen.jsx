@@ -279,6 +279,13 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
     }
   };
 
+  const handlePrevText = () => {
+    if (currentTextIndex >= 1) {
+      setCurrentReplic(currentCutscene.text[currentTextIndex - 1]);
+      setCurrentTextIndex(currentTextIndex - 1);
+    }
+  };
+
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "Enter") {
@@ -385,7 +392,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         }}
       >
         <button
-          onClick={onBack}
+          onClick={handlePrevText}
           style={{
             width: "calc(50% - 10px)", // Ширина кнопки 50% от контейнера
             padding: "15px",
@@ -439,6 +446,45 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
           }}
         >
           Продолжить
+        </button>
+      </div>
+      <div
+        style={{
+          width: "100%",
+          paddingTop: "20px",
+          //padding: "20px",
+          borderRadius: "15px",
+          display: "flex",
+          justifyContent: "center",
+          boxSizing: "border-box",
+          maxWidth: "1000px",
+        }}
+      >
+        <button
+          onClick={onBack}
+          style={{
+            width: "100%",
+            padding: "15px",
+            fontSize: "16px",
+            color: "white",
+            background: "linear-gradient(145deg, #48416b, #4c435e)",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background =
+              "linear-gradient(145deg, #4c435e, #48416b)";
+            e.target.style.transform = "scale(1.05)";
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background =
+              "linear-gradient(145deg, #48416b, #4c435e)";
+            e.target.style.transform = "scale(1)";
+          }}
+        >
+          Назад к миссиям
         </button>
       </div>
     </div>

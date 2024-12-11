@@ -136,15 +136,15 @@ const App = () => {
           }}
         />
       ) : screen === 3 ? (
-        <DefeatScreen onBackToMain={StartStartScreen} />
+        <DefeatScreen onBackToMain={startLevels} />
       ) : screen === 4 ? (
         <AboutScreen onBack={StartStartScreen} />
       ) : screen === 5 ? (
-        <VictoryScreen onBackToMain={StartStartScreen} />
+        <VictoryScreen onBackToMain={startLevels} />
       ) : (
         <CutsceneScreen
           level={levelId}
-          onBack={StartStartScreen}
+          onBack={startLevels}
           onNext={startGame}
         />
       )}
