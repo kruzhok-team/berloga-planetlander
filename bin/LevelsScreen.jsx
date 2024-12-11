@@ -1,71 +1,6 @@
 import React, { useState } from "react";
 
-const levelsData = [
-  {
-    id: 1,
-    name: "Берлога",
-    x: 400,
-    y: 600,
-    children: [2],
-    image: "image1.png",
-  },
-  {
-    id: 2,
-    name: "Берлога",
-    x: 500,
-    y: 500,
-    children: [3],
-    image: "image1.png",
-  },
-  {
-    id: 3,
-    name: "Берлога",
-    x: 600,
-    y: 450,
-    children: [4],
-    image: "image2.png",
-  },
-  {
-    id: 4,
-    name: "Берлога",
-    x: 675,
-    y: 525,
-    children: [5],
-    image: "image3.png",
-  },
-  {
-    id: 5,
-    name: "Цетос",
-    x: 775,
-    y: 575,
-    children: [6],
-    image: "image4.png",
-  },
-  {
-    id: 6,
-    name: "Цетос",
-    x: 900,
-    y: 575,
-    children: [7],
-    image: "image5.png",
-  },
-  {
-    id: 7,
-    name: "Цетос",
-    x: 875,
-    y: 700,
-    children: [8],
-    image: "image6.png",
-  },
-  {
-    id: 8,
-    name: "Тетис",
-    x: 800,
-    y: 675,
-    children: [5],
-    image: "image7.png",
-  },
-];
+let levelsData = [];
 
 const getLevelById = (id) => {
   return levelsData.find((level) => level.id === id);
@@ -89,7 +24,11 @@ const renderLines = (level) => {
   });
   return lines;
 };
-const LevelScreen = ({ onLevelSelect, onBack }) => {
+const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
+  //const levelManager = new LevelManager(levelsInit);
+  levelsData = levelD;
+  console.log(levelD);
+
   const [activeLevelId, setActiveLevelId] = useState(null);
 
   return (
@@ -134,31 +73,34 @@ const LevelScreen = ({ onLevelSelect, onBack }) => {
         >
           {levelsData.map((level) => {
             const isActive = level.id === activeLevelId;
-
             return (
               <React.Fragment key={level.id}>
                 <g
-                  onClick={() => onLevelSelect(level.id)}
+                  onClick={
+                    level.lock ? () => {} : () => onLevelSelect(level.id)
+                  }
                   onMouseEnter={() => setActiveLevelId(level.id)}
                   onMouseLeave={() => setActiveLevelId(null)}
                   style={{
                     cursor: "pointer",
                   }}
                 >
-                  <circle
-                    cx={level.x}
-                    cy={level.y}
-                    r={isActive ? 40 : 30}
-                    fill="rgba(255, 255, 255, 0.1)"
-                    stroke="rgba(255, 255, 255, 0.5)"
-                    strokeWidth="2"
-                    style={{
-                      transition: "r 0.3s ease-in-out",
-                    }}
+                  <image
+                    href={level.lock ? "./images/lock.svg" : level.image} // Адрес картинки
+                    x={level.x - 30} // Фиксированный центр
+                    y={level.y - 30}
+                    width={isActive ? 70 : 60} // Базовый размер
+                    height={isActive ? 70 : 60}
+                    //style={{
+                    //transition: "r 0.3s ease-in-out",
+                    //transform: isActive ? "scale(1.33)" : "scale(1)", // Увеличение на 33%
+                    //transformOrigin: "center", // Центр как точка трансформации
+                    //transition: "transform 0.3s ease-in-out", // Плавность увеличения
+                    //}}
                   />
                   <text
                     x={level.x}
-                    y={level.y + 5}
+                    y={level.y + 50} // Смещаем ниже изображения
                     fontSize="16"
                     fill="white"
                     textAnchor="middle"
@@ -168,7 +110,7 @@ const LevelScreen = ({ onLevelSelect, onBack }) => {
                   </text>
                   <text
                     x={level.x}
-                    y={level.y + 50}
+                    y={level.y + 70} // Смещаем ниже номера
                     fontSize="14"
                     fill="white"
                     textAnchor="middle"
@@ -180,6 +122,52 @@ const LevelScreen = ({ onLevelSelect, onBack }) => {
                 {renderLines(level)}
               </React.Fragment>
             );
+
+            //return (
+            //  <React.Fragment key={level.id}>
+            //    <g
+            //      onClick={() => onLevelSelect(level.id)}
+            //      onMouseEnter={() => setActiveLevelId(level.id)}
+            //      onMouseLeave={() => setActiveLevelId(null)}
+            //      style={{
+            //        cursor: "pointer",
+            //      }}
+            //    >
+            //      <circle
+            //        cx={level.x}
+            //        cy={level.y}
+            //        r={isActive ? 40 : 30}
+            //        fill="rgba(255, 255, 255, 0.1)"
+            //        stroke="rgba(255, 255, 255, 0.5)"
+            //        strokeWidth="2"
+            //        style={{
+            //          transition: "r 0.3s ease-in-out",
+            //        }}
+            //      />
+            //      <text
+            //        x={level.x}
+            //        y={level.y + 5}
+            //        fontSize="16"
+            //        fill="white"
+            //        textAnchor="middle"
+            //        dominantBaseline="middle"
+            //      >
+            //        {level.id}
+            //      </text>
+            //      <text
+            //        x={level.x}
+            //        y={level.y + 50}
+            //        fontSize="14"
+            //        fill="white"
+            //        textAnchor="middle"
+            //        dominantBaseline="middle"
+            //      >
+            //        {level.name}
+            //      </text>
+            //    </g>
+            //    {renderLines(level)}
+            //  </React.Fragment>
+            //);
           })}
         </svg>
       </div>
