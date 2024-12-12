@@ -839,8 +839,8 @@ class Game {
       case 3: // dungeon
         this.DrawMap(c, 2, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
-        c.fillRect(150, 190, 90, 10);
-        //this.DrawBuilding(c, 80, 150, 65, 50);
+        c.fillRect(150, 200, 90, 10);
+        this.DrawBuilding(c, 80, 160, 65, 50);
         break;
 
       case 4:
@@ -853,14 +853,14 @@ class Game {
         this.DrawMap(c, 3, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.clearRect(320, 440, 100, 30);
-        c.fillRect(320, 460, 100, 10);
+        c.fillRect(300, 460, 100, 10);
         break;
 
       case 5: // waterfall
         this.DrawMap(c, 4, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(750, 290, 150, 10);
-        //this.DrawBuilding(c, 900, 250, 65, 50);
+        this.DrawBuilding(c, 900, 250, 65, 50);
         //this.DrawBuilding(c, 700, 200, 65, 100);
         break;
 
@@ -884,17 +884,17 @@ class Game {
         c.fillStyle = "#202020FE";
         c.fillRect(430, 390, 140, 20);
 
-        //this.DrawBuilding(c, 580, 450, 65, 40);
+        this.DrawBuilding(c, 580, 440, 65, 40);
 
         c.fillStyle = "#FFFFFFFF";
-        c.fillRect(580, 450, 65, 10);
+        c.fillRect(580, 440, 65, 10);
         break;
 
       case 8:
         this.gameWasm._ShipSetActive();
         this.DrawMap(c, 7, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
-        c.fillRect(0, 490, 80, 10);
+        c.fillRect(85, 460, 80, 10);
         break;
     }
   }

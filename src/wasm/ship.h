@@ -18,6 +18,7 @@ typedef struct {
 } Ship;
 
 extern Ship s;
+extern float gravity;
 
 void ShipInit(int x, int y);
 void ShipStep(float dt);
