@@ -76,6 +76,7 @@ class Game {
     this.showOverlay = showOverlay;
     console.log(showOverlay);
     this.overlay_typing = false;
+    this.overlayCurrentIndex = 0;
 
     this.background_image = image;
     this.level = level;
@@ -503,7 +504,10 @@ class Game {
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "24px Arial";
-    const displayedText = text.slice(0, currentIndex);
+    const displayedText = text.slice(
+      0,
+      currentIndex < text.length - 1 ? currentIndex : text.length - 1,
+    );
     this.wrapText(ctx, displayedText, 50, height - 150, width - 100, 30);
 
     ctx.font = "16px Arial";
@@ -512,12 +516,12 @@ class Game {
 
   startTyping(text, drawCallback, intervalTime = 50) {
     this.overlay_typing = true;
-    let currentIndex = 0;
+    this.overlayCurrentIndex = 0;
     const interval = setInterval(() => {
-      currentIndex++;
-      drawCallback(currentIndex);
+      this.overlayCurrentIndex++;
+      drawCallback(this.overlayCurrentIndex);
 
-      if (currentIndex >= text.length) {
+      if (this.overlayCurrentIndex >= text.length) {
         clearInterval(interval);
         this.overlay_typing = false;
       }
@@ -569,101 +573,13 @@ class Game {
           enterMessage,
         );
       },
-      50,
+      10,
     );
 
     canvas.setAttribute("tabindex", "0");
-    canvas.focus();
-    canvas.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  //showCanvasOverlay(canvas, text, imageUrl) {
-  //  const ctx = canvas.getContext("2d");
-  //  const width = canvas.width;
-  //  const height = canvas.height;
-  //
-  //  let currentIndex = 0;
-  //  let interval;
-  //  let imageLoaded = false;
-  //
-  //  const backgroundColor = "rgba(0, 0, 0, 0.03)";
-  //  const enterMessage = "Нажмите Enter, чтобы продолжить";
-  //
-  //  const image = new Image();
-  //  image.src = imageUrl;
-  //  image.onload = () => {
-  //    imageLoaded = true;
-  //    drawOverlay();
-  //  };
-  //
-  //  function wrapText(context, text, x, y, maxWidth, lineHeight) {
-  //    const words = text.split(" ");
-  //    let line = "";
-  //    const lines = [];
-  //
-  //    for (let n = 0; n < words.length; n++) {
-  //      const testLine = line + words[n] + " ";
-  //      const metrics = context.measureText(testLine);
-  //      const testWidth = metrics.width;
-  //
-  //      if (testWidth > maxWidth && n > 0) {
-  //        lines.push(line);
-  //        line = words[n] + " ";
-  //      } else {
-  //        line = testLine;
-  //      }
-  //    }
-  //    lines.push(line);
-  //    lines.forEach((l, i) => {
-  //      context.fillText(l, x, y + i * lineHeight);
-  //    });
-  //  }
-  //
-  //  function drawOverlay() {
-  //    ctx.clearRect(0, 0, width, height);
-  //    ctx.fillStyle = backgroundColor;
-  //    ctx.fillRect(0, 0, width, height);
-  //
-  //    if (imageLoaded) {
-  //      const imgWidth = 200; // ширина изображения
-  //      const imgHeight = 200; // высота изображения
-  //      ctx.drawImage(
-  //        image,
-  //        (width - imgWidth) / 2,
-  //        (height - imgHeight) / 2 - 50,
-  //        imgWidth,
-  //        imgHeight,
-  //      );
-  //    }
-
-  //ctx.fillStyle = "#ffffff";
-  //    ctx.font = "24px Arial";
-  //    const displayedText = text.slice(0, currentIndex);
-  //    wrapText(ctx, displayedText, 50, height - 150, width - 100, 30);
-  //
-  //    ctx.font = "16px Arial";
-  //    ctx.fillText(enterMessage, 50, height - 50);
-  //  }
-  //
-  //  function startTyping() {
-  //    interval = setInterval(() => {
-  //      if (currentIndex < text.length) {
-  //        currentIndex++;
-  //        drawOverlay();
-  //      } else {
-  //        clearInterval(interval);
-  //      }
-  //    }, 100); // Интервал для эффекта печати текста
-  //  }
-  //
-  //  canvas.setAttribute("tabindex", "0");
-  //  canvas.focus();
-  //  canvas.addEventListener("keydown", this.handleKeyDown);
-  //
-  //  drawOverlay();
-  //  startTyping();
-  //}
-  //
   clearOverlay() {
     const canvas = document.getElementById("showcanvas");
     const ctx = canvas.getContext("2d");
@@ -689,7 +605,8 @@ class Game {
     console.log(this.overlay_typing);
     if (event.key === "Enter" && !this.overlay_typing) {
       this.clearOverlay();
-      //this.gamePhase = GAME_PHASES.PLAY;
+    } else if (event.key === "Enter") {
+      this.overlayCurrentIndex = 1000;
     }
   }
 
@@ -754,7 +671,6 @@ class Game {
         data[i + 1] === 0xff &&
         data[i + 2] === 0xff
       ) {
-        // white is landing pad
         collisionimage.data[i + 1] = 0xff;
       } else {
         collisionimage.data[i + 0] = 0xff; // red
@@ -775,10 +691,12 @@ class Game {
         "style",
         "width: auto; height: " + window.innerHeight + "px;",
       );
-      this.graphics.showcanvas.setAttribute(
-        "style",
-        "width: auto; height: " + window.innerHeight + "px;",
-      );
+      document
+        .getElementById("showcanvas")
+        .setAttribute(
+          "style",
+          "width: auto; height: " + window.innerHeight + "px;",
+        );
       this.graphics.fluidcanvas.setAttribute(
         "style",
         "width: auto; height: " + window.innerHeight + "px;",
@@ -796,10 +714,12 @@ class Game {
         "style",
         "width: " + window.innerWidth + "px; height: auto;",
       );
-      this.graphics.showcanvas.setAttribute(
-        "style",
-        "width: " + window.innerWidth + "px; height: auto;",
-      );
+      document
+        .getElementById("showcanvas")
+        .setAttribute(
+          "style",
+          "width: " + window.innerWidth + "px; height: auto;",
+        );
       this.graphics.fluidcanvas.setAttribute(
         "style",
         "width: " + window.innerWidth + "px; height: auto;",
@@ -932,16 +852,11 @@ class Game {
         )
           continue;
 
-        // Расстояние от текущей точки до (ii, jj)
         let r = (x - ii * 33) * (x - ii * 33) + (y - jj * 32) * (y - jj * 32);
 
-        // Генерация псевдошума
-        //let noiseValue = this.simpleNoise(ii, jj);
         let noiseValue = Math.random();
-        // Добавление шума в плотность
         let noiseFactor = 1 + noiseValue; // Масштабируем шум
 
-        // Суммируем плотность с учетом шума
         n += Math.exp(-0.001 * r) * this.texture[jj * 32 + ii];
       }
     }
@@ -971,7 +886,6 @@ class Game {
           rad = (gradx * 0.2) / rad;
         }
 
-        // Выбираем цвет в зависимости от плотности (n)
         let col;
         if (n > 2) {
           col = 0; // #3F3B53
@@ -990,7 +904,6 @@ class Game {
           c.fillRect(i, j, 1, 1);
         } else if (n > 1.3 && (i & 7) === 0 && (j & 7) === 0) {
           c.translate(i, j);
-          // Добавляем случайную ориентацию
           c.rotate((i * j * n) % (Math.PI * 2)); // случайное вращение
           c.fillRect(-8, -8, 1, 1);
           c.resetTransform();
@@ -1028,8 +941,6 @@ class Game {
   }
 
   DrawLevel(c, level) {
-    // if (level === thislastlevel) return;
-    // lastlevel = level;
     c.clearRect(
       0,
       0,
@@ -1045,8 +956,6 @@ class Game {
         c.font = "20px Arial";
         c.fillText("Посадочная платформа", 320, 210);
         let data = c.getImageData(0, 0, 1024, 512).data;
-        //this.DrawBuilding(c, 880, 200, 65, 200);
-        //this.DrawBuilding(c, 840, 250, 25, 150);
         break;
 
       case 2:
@@ -1081,7 +990,6 @@ class Game {
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(750, 290, 150, 10);
         this.DrawBuilding(c, 900, 250, 65, 50);
-        //this.DrawBuilding(c, 700, 200, 65, 100);
         break;
 
       case 6:
@@ -1097,7 +1005,6 @@ class Game {
         for (let i = 0; i < 50; i++) {
           let h = Math.random() * 250 + 50;
           let x = Math.random() * 1024;
-          //if (x < 300 || x > 800) this.DrawBuilding(c, x, 500 - h, 35, h);
         }
         c.fillStyle = "#202020FF";
         c.fillRect(450, 410, 100, 90);
@@ -1127,13 +1034,9 @@ class Game {
           0x000078a2,
           0x000068a5,
           0xff980063,
-          //0x0090a583,
-          //0x0094b9af,
-          //0xff11299b,
           40,
           40,
         );
-        //this.gameWasm._Reset(this.level, 0xff7070, 0x602020, 0x000000, 40, 40);
         this.gameWasm._ShipSetActive();
         break;
 
@@ -1224,7 +1127,6 @@ class Game {
 
   StopGame() {
     this.audio.Stop();
-    //this.audio.initialized = false;
     this.audio.ThrustOff();
     this.isRunning = false;
   }
@@ -1232,7 +1134,6 @@ class Game {
 
 const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
   useEffect(() => {
-    // Main(levelNumber, onLose);
     let level = LEVELS.find((level) => level.id === levelNumber);
     let image = new Image();
     console.log(level);

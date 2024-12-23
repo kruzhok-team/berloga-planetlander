@@ -384,108 +384,117 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
 
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
+          position: "absolute",
+          bottom: "0px",
           width: "100%",
-          maxWidth: "1000px", // Задаем максимальную ширину
-          marginTop: "20px", // Отступ сверху для кнопок
-        }}
-      >
-        <button
-          onClick={handlePrevText}
-          style={{
-            width: "calc(50% - 10px)", // Ширина кнопки 50% от контейнера
-            padding: "15px",
-            fontSize: "16px",
-            color: "white",
-            background: "linear-gradient(145deg, #48416b, #4c435e)",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-            outline: "none",
-          }}
-          onMouseOver={(e) => {
-            e.target.style.background =
-              "linear-gradient(145deg, #4c435e, #48416b)";
-            e.target.style.transform = "scale(1.05)";
-          }}
-          onMouseOut={(e) => {
-            e.target.style.background =
-              "linear-gradient(145deg, #48416b, #4c435e)";
-            e.target.style.transform = "scale(1)";
-          }}
-        >
-          Назад
-        </button>
-
-        {/* Кнопка Продолжить */}
-        <button
-          onClick={handleNextText}
-          style={{
-            width: "calc(50% - 10px)", // Ширина кнопки 50% от контейнера
-            padding: "15px",
-            fontSize: "16px",
-            color: "white",
-            background: "linear-gradient(145deg, #48416b, #4c435e)",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-            outline: "none",
-          }}
-          onMouseOver={(e) => {
-            e.target.style.background =
-              "linear-gradient(145deg, #4c435e, #48416b)";
-            e.target.style.transform = "scale(1.05)";
-          }}
-          onMouseOut={(e) => {
-            e.target.style.background =
-              "linear-gradient(145deg, #48416b, #4c435e)";
-            e.target.style.transform = "scale(1)";
-          }}
-        >
-          Продолжить
-        </button>
-      </div>
-      <div
-        style={{
-          width: "100%",
-          paddingTop: "20px",
-          //padding: "20px",
-          borderRadius: "15px",
-          display: "flex",
-          justifyContent: "center",
-          boxSizing: "border-box",
           maxWidth: "1000px",
         }}
       >
-        <button
-          onClick={onBack}
+        <div
           style={{
+            display: "flex",
+            justifyContent: "space-between",
             width: "100%",
-            padding: "15px",
-            fontSize: "16px",
-            color: "white",
-            background: "linear-gradient(145deg, #48416b, #4c435e)",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-          }}
-          onMouseOver={(e) => {
-            e.target.style.background =
-              "linear-gradient(145deg, #4c435e, #48416b)";
-            e.target.style.transform = "scale(1.05)";
-          }}
-          onMouseOut={(e) => {
-            e.target.style.background =
-              "linear-gradient(145deg, #48416b, #4c435e)";
-            e.target.style.transform = "scale(1)";
+            maxWidth: "1000px", // Задаем максимальную ширину
+            marginTop: "20px", // Отступ сверху для кнопок
           }}
         >
-          Назад к миссиям
-        </button>
+          <button
+            onClick={handlePrevText}
+            style={{
+              width: "calc(50% - 10px)", // Ширина кнопки 50% от контейнера
+              padding: "15px",
+              fontSize: "16px",
+              color: "white",
+              background: "linear-gradient(145deg, #48416b, #4c435e)",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              outline: "none",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background =
+                "linear-gradient(145deg, #4c435e, #48416b)";
+              e.target.style.transform = "scale(1.05)";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background =
+                "linear-gradient(145deg, #48416b, #4c435e)";
+              e.target.style.transform = "scale(1)";
+            }}
+          >
+            Назад
+          </button>
+
+          {/* Кнопка Продолжить */}
+          <button
+            onClick={handleNextText}
+            style={{
+              width: "calc(50% - 10px)", // Ширина кнопки 50% от контейнера
+              padding: "15px",
+              fontSize: "16px",
+              color: "white",
+              background: "linear-gradient(145deg, #48416b, #4c435e)",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              outline: "none",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background =
+                "linear-gradient(145deg, #4c435e, #48416b)";
+              e.target.style.transform = "scale(1.05)";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background =
+                "linear-gradient(145deg, #48416b, #4c435e)";
+              e.target.style.transform = "scale(1)";
+            }}
+          >
+            Продолжить
+          </button>
+        </div>
+        <div
+          style={{
+            width: "100%",
+            paddingTop: "20px",
+            //padding: "20px",
+            borderRadius: "15px",
+            display: "flex",
+            justifyContent: "center",
+            boxSizing: "border-box",
+            maxWidth: "1000px",
+          }}
+        >
+          <button
+            onClick={onBack}
+            style={{
+              width: "100%",
+              padding: "15px",
+              fontSize: "16px",
+              color: "white",
+              background: "linear-gradient(145deg, #48416b, #4c435e)",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background =
+                "linear-gradient(145deg, #4c435e, #48416b)";
+              e.target.style.transform = "scale(1.05)";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background =
+                "linear-gradient(145deg, #48416b, #4c435e)";
+              e.target.style.transform = "scale(1)";
+            }}
+          >
+            Назад к миссиям
+          </button>
+        </div>
       </div>
     </div>
   );
