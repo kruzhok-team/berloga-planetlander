@@ -490,8 +490,8 @@ class Game {
     ctx.fillRect(0, 0, width, height);
 
     if (imageLoaded) {
-      const imgWidth = 200; // ширина изображения
-      const imgHeight = 200; // высота изображения
+      const imgWidth = 500; // ширина изображения
+      const imgHeight = 500; // высота изображения
       ctx.drawImage(
         image,
         (width - imgWidth) / 2,
@@ -533,7 +533,7 @@ class Game {
 
     let currentIndex = 0;
     let imageLoaded = false;
-    const backgroundColor = "rgba(0, 0, 0, 0.03)";
+    const backgroundColor = "rgba(0, 0, 0, 0.5)";
     const enterMessage = "Нажмите Enter, чтобы продолжить";
 
     const image = new Image();
