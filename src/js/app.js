@@ -12,76 +12,84 @@ import LevelManager from "./progress.jsx";
 const levelsInit = [
   {
     id: 1,
-    name: "Берлога",
+    name: "Берлога. Первая миссия",
     x: 400,
     y: 600,
     children: [2],
     image: "./images/berloga.png",
+    showOverlay: true,
   },
   {
     id: 2,
-    name: "Берлога",
-    x: 600,
-    y: 500,
+    name: "Берлога. Гравитация",
+    x: 550,
+    y: 550,
     children: [3],
     image: "./images/berloga.png",
+    showOverlay: false,
     //image: "image1.png",
   },
   {
     id: 3,
-    name: "Берлога",
+    name: "Берлога. Поправка на ветер",
     x: 700,
     y: 450,
     children: [4],
     image: "./images/berloga.png",
+    showOverlay: false,
 
     //image: "image2.png",
   },
   {
     id: 4,
-    name: "Берлога",
+    name: "Берлога. Опасная доставка",
     x: 825,
     y: 525,
     children: [5],
     image: "./images/berloga.png",
+    showOverlay: false,
 
     //image: "image3.png",
   },
   {
     id: 5,
-    name: "Цетос",
-    x: 925,
+    name: "Цетос. Посадка на гигант",
+    x: 940,
     y: 575,
     children: [6],
     image: "./images/cetos.png",
+    showOverlay: false,
     //image: "image4.png",
   },
   {
     id: 6,
-    name: "Цетос",
+    name: "Цетос. Мастерство манёвра",
     x: 1150,
     y: 575,
     children: [7],
     image: "./images/cetos.png",
     //image: "image5.png",
+    showOverlay: false,
   },
   {
     id: 7,
-    name: "Цетос",
+    name: "Цетос. Доставка в каньон",
     x: 1125,
     y: 725,
     children: [8],
     image: "./images/cetos.png",
+    showOverlay: false,
 
     //image: "image6.png",
   },
   {
     id: 8,
-    name: "Тетис",
+    name: "Тетис. Водный мир",
     x: 950,
     y: 700,
     children: [],
     image: "./images/tetic.png",
+    showOverlay: false,
     //image: "image7.png",
   },
 ];
@@ -134,6 +142,10 @@ const App = () => {
             startVictoryScreen();
             levelManager.setCompleteStatus(levelId, true);
           }}
+          showOverlay={
+            levelManager.getAllLevels().find((level) => level.id == levelId)
+              .showOverlay
+          }
         />
       ) : screen === 3 ? (
         <DefeatScreen onBackToMain={startLevels} />

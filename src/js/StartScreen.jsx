@@ -19,6 +19,7 @@ const StartScreen = ({ onStart, onAbout }) => (
   >
     <p
       style={{
+        margin: 0,
         padding: "0 10%",
         fontFamily: "Arial",
         fontSize: "4vw",
@@ -28,6 +29,19 @@ const StartScreen = ({ onStart, onAbout }) => (
       }}
     >
       Межпланетная почта
+    </p>
+    <p
+      style={{
+        margin: 0,
+        padding: "0 10%",
+        fontFamily: "Arial",
+        fontSize: "2vw",
+        fontWeight: "bold",
+        maxWidth: "90%",
+        textAlign: "center",
+      }}
+    >
+      Покажи мастерство мягкой посадки!
     </p>
     <div
       style={{

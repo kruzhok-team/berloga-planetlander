@@ -4,14 +4,15 @@ import "./audio.js";
 const GAME_PHASES = {
   PLAY: 0,
   WAITING: 1,
-  DESTROY_WAINTING: 2,
+  DESTROY_WAITING: 2,
+  PAUSE: 3,
 };
 
 const LEVELS = [
   {
     id: 1,
     name: "Первый уровень",
-    background_image: "./images/background1.svg",
+    background_image: "./images/background3.svg",
     ship_image: "./images/ship.svg",
   },
   {
@@ -69,7 +70,13 @@ const LEVELS = [
 ];
 
 class Game {
-  constructor(level, onLose, onWin, image, audio, ship_image) {
+  constructor(level, onLose, onWin, image, audio, ship_image, showOverlay) {
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.clearOverlay = this.clearOverlay.bind(this);
+    this.showOverlay = showOverlay;
+    console.log(showOverlay);
+    this.overlay_typing = false;
+
     this.background_image = image;
     this.level = level;
     this.gamePhase = GAME_PHASES.PLAY;
@@ -105,7 +112,8 @@ class Game {
       () => Math.random() * 0.1 + 0.9,
     );
 
-    //this.ship_image = ship_image;
+    this.overlaycnt = 0;
+
     this.ship = {
       texture: ship_image,
       position: { x: 18, y: 16 }, // Позиция на канвасе
@@ -113,14 +121,10 @@ class Game {
       rotation: 0, // Угол поворота в градусах
       collisionShape: {
         type: "rectangle", // Или 'rectangle' для прямоугольной формы
-        //radius: 12, // Радиус (если круг)
         width: 30, // Ширина (если прямоугольник)
         height: 10, // Высота (если прямоугольник)
       },
     };
-
-    // Загрузка текстуры корабля
-    //ship.texture.src = "path/to/ship_image.png";
   }
 
   InitGraphics(N, M) {
@@ -180,47 +184,28 @@ class Game {
       { alpha: true, willReadFrequently: true },
     );
 
-    //this.graphics.shipcanvas = document.createElement("canvas");
-    //this.graphics.shipcanvas.width = 36;
-    //this.graphics.shipcanvas.height = 40;
-    //this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
-    //alpha: true,
-    //});
+    this.graphics.showcanvas = document.getElementById("showcanvas");
+    this.graphics.showcanvas.width = window.innerWidth;
+    this.graphics.showcanvas.height = window.innerHeight;
+    this.graphics.showcanvasctx = this.graphics.showcanvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: true,
+    });
 
-    // Получаем устройство с учётом плотности пикселей
     scale = window.devicePixelRatio || 1;
 
-    // Создаем канвас с улучшенным разрешением
     this.graphics.shipcanvas = document.createElement("canvas");
     this.graphics.shipcanvas.width = 72 * scale; // Увеличение физического разрешения
     this.graphics.shipcanvas.height = 80 * scale; // Увеличение физического разрешения
 
-    // Устанавливаем CSS-стили для отображаемых размеров (размеры остаются 36x40)
     this.graphics.shipcanvas.style.width = "36px"; // Отображаемые размеры
     this.graphics.shipcanvas.style.height = "40px"; // Отображаемые размеры
 
-    // Получаем контекст и масштабируем его для работы с высоким разрешением
     this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
       alpha: true,
     });
     this.graphics.shipctx.scale(scale, scale); // Масштабируем контекст
 
-    //this.graphics.shipcanvas = document.createElement("canvas");
-    ////let scale = window.devicePixelRatio || 1; // Учитываем устройство
-    //this.graphics.shipcanvas.width = 36 * scale;
-    //this.graphics.shipcanvas.height = 40 * scale;
-    //
-    //// Устанавливаем CSS-стили для отображаемых размеров
-    //this.graphics.shipcanvas.style.width = "36px";
-    //this.graphics.shipcanvas.style.height = "40px";
-    //
-    //// Получаем контекст и масштабируем его
-    //this.graphics.shipctx = this.graphics.shipcanvas.getContext("2d", {
-    //  alpha: true,
-    //});
-    //this.graphics.shipctx.scale(scale, scale);
-
-    //this.DrawShip(this.graphics.shipctx, 18, 16);
     this.DrawShip(this.graphics.overlayctx, this.ship);
   }
 
@@ -275,15 +260,12 @@ class Game {
   CollisionDetection() {
     const { overlayctx, collisioncanvas } = this.graphics;
 
-    // Очистить и отрисовать текущую ситуацию
     overlayctx.clearRect(0, 0, this.graphics.N * 4, this.graphics.M * 4);
     overlayctx.drawImage(collisioncanvas, 0, 0);
     this.DrawShip(overlayctx, this.ship);
 
-    // Подсчет пикселей столкновения
     const newCollisionCounts = this.CountCollisionPixels(overlayctx);
 
-    // Логика обработки столкновений
     if (
       Math.abs(newCollisionCounts.boundary - this.collisionCounts.boundary) > 10
     ) {
@@ -309,34 +291,28 @@ class Game {
   Draw() {
     const timeNow = Date.now();
 
-    // Обновление FPS
     if (timeNow - this.lastUpdateTime > 2000) {
       this.fps = (this.frames / (timeNow - this.lastUpdateTime)) * 1e3;
       this.lastUpdateTime = timeNow;
       this.frames = 0;
     }
 
-    // Отображение fluid canvas
     const { fluidctx, imagedata } = this.graphics;
     for (let i = 0; i < this.graphics.N * this.graphics.M * 4; i++) {
       imagedata.data[i] = this.color[i];
     }
     fluidctx.putImageData(imagedata, 0, 0);
 
-    // Отображение boundary и корабля
     const { overlayctx, boundarycanvas } = this.graphics;
     overlayctx.clearRect(0, 0, this.graphics.N * 4, this.graphics.M * 4);
     overlayctx.drawImage(boundarycanvas, 0, 0);
 
     if (!this.gameWasm._IsExploded()) {
-      //console.log(this.gameWasm._ShipGetAngle());
       this.ship.position.x = this.gameWasm._ShipGetX() * 4;
       this.ship.position.y = this.gameWasm._ShipGetY() * 4;
-      //this.ship.rotation = this.gameWasm._ShipGetAngle();
       this.DrawShip(overlayctx, this.ship);
     }
 
-    // Обновление SVG-оверлея
     this.UpdateSVGOverlay(overlayctx);
   }
 
@@ -360,21 +336,8 @@ class Game {
     return { boundary: boundaryCount, landingpad: landingPadCount };
   }
 
-  //CountCollisionPixels(context) {
-  //  let boundaryCount = 0;
-  //  let landingPadCount = 0;
-  //  const data = context.getImageData(0, 0, 1024, 512).data;
-  //
-  //  for (let i = 0; i < data.length; i += 4) {
-  //    if (data[i + 3] !== 0xff) continue; // Проверка альфа-канала
-  //    landingPadCount += data[i + 1] === 0xff ? 1 : 0; // Зеленый цвет
-  //    boundaryCount += data[i + 0] === 0xff ? 1 : 0; // Красный цвет
-  //  }
-  //
-  //  return { boundary: boundaryCount, landingpad: landingPadCount };
-  //}
-
   Loop(onLose) {
+    console.log(this.gamePhase);
     if (!this.isRunning) return;
 
     if (this.gamePhase === GAME_PHASES.PLAY) {
@@ -388,7 +351,10 @@ class Game {
     this.frames++;
     window.requestAnimationFrame(() => this.Draw());
 
-    if (this.gamePhase === GAME_PHASES.WAITING) {
+    if (
+      this.gamePhase === GAME_PHASES.WAITING ||
+      this.gamePhase === GAME_PHASES.PAUSE
+    ) {
       window.setTimeout(() => this.Loop(onLose), 0);
       return;
     }
@@ -404,7 +370,6 @@ class Game {
       this.audio.ThrustOff();
 
       if (this.ships > 0) {
-        // Проверяем, что у нас есть корабли
         this.ships--; // Уменьшаем только если еще есть корабли
         if (this.ships === 0) {
           window.setTimeout(() => {
@@ -421,6 +386,311 @@ class Game {
     }
 
     window.setTimeout(() => this.Loop(onLose), 0);
+  }
+
+  //showCanvasOverlay(canvas, text, imageUrl) {
+  //  const ctx = canvas.getContext("2d");
+  //  const width = canvas.width;
+  //  const height = canvas.height;
+  //
+  //  let currentIndex = 0;
+  //  let interval;
+  //  let imageLoaded = false;
+  //
+  //  const backgroundColor = "rgba(0, 0, 0, 0.03)";
+  //  const enterMessage = "Нажмите Enter, чтобы продолжить";
+  //
+  //  const image = new Image();
+  //  image.src = imageUrl;
+  //  image.onload = () => {
+  //    imageLoaded = true;
+  //    drawOverlay();
+  //  };
+  //
+  //  function drawOverlay() {
+  //    ctx.fillStyle = backgroundColor;
+  //    ctx.fillRect(0, 0, width, height);
+  //
+  //    if (imageLoaded) {
+  //      const imgWidth = 200; // ширина изображения
+  //      const imgHeight = 200; // высота изображения
+  //      ctx.drawImage(
+  //        image,
+  //        (width - imgWidth) / 2,
+  //        (height - imgHeight) / 2 - 50,
+  //        imgWidth,
+  //        imgHeight,
+  //      );
+  //    }
+  //
+  //    ctx.fillStyle = "#ffffff";
+  //    ctx.font = "24px Arial";
+  //    const displayedText = text.slice(0, currentIndex);
+  //    ctx.fillText(displayedText, 50, height - 100, width - 100);
+  //
+  //    ctx.font = "16px Arial";
+  //    ctx.fillText(enterMessage, 50, height - 50);
+  //  }
+  //
+  //  function startTyping() {
+  //    interval = setInterval(() => {
+  //      if (currentIndex < text.length) {
+  //        currentIndex++;
+  //        drawOverlay();
+  //      } else {
+  //        clearInterval(interval);
+  //      }
+  //    }, 100); // Интервал для эффекта печати текста
+  //  }
+  //
+  //  canvas.setAttribute("tabindex", "0");
+  //  canvas.focus();
+  //  canvas.addEventListener("keydown", this.handleKeyDown);
+  //
+  //  drawOverlay();
+  //  startTyping();
+  //}
+
+  wrapText(context, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(" ");
+    let line = "";
+    const lines = [];
+
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      const metrics = context.measureText(testLine);
+      const testWidth = metrics.width;
+
+      if (testWidth > maxWidth && n > 0) {
+        lines.push(line);
+        line = words[n] + " ";
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+    lines.forEach((l, i) => {
+      context.fillText(l, x, y + i * lineHeight);
+    });
+  }
+
+  drawOverlay(
+    ctx,
+    width,
+    height,
+    backgroundColor,
+    image,
+    imageLoaded,
+    text,
+    currentIndex,
+    enterMessage,
+  ) {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, width, height);
+
+    if (imageLoaded) {
+      const imgWidth = 200; // ширина изображения
+      const imgHeight = 200; // высота изображения
+      ctx.drawImage(
+        image,
+        (width - imgWidth) / 2,
+        (height - imgHeight) / 2 - 50,
+        imgWidth,
+        imgHeight,
+      );
+    }
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "24px Arial";
+    const displayedText = text.slice(0, currentIndex);
+    this.wrapText(ctx, displayedText, 50, height - 150, width - 100, 30);
+
+    ctx.font = "16px Arial";
+    ctx.fillText(enterMessage, 50, height - 50);
+  }
+
+  startTyping(text, drawCallback, intervalTime = 50) {
+    this.overlay_typing = true;
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      currentIndex++;
+      drawCallback(currentIndex);
+
+      if (currentIndex >= text.length) {
+        clearInterval(interval);
+        this.overlay_typing = false;
+      }
+    }, intervalTime);
+
+    return interval;
+  }
+
+  showCanvasOverlay(canvas, text, imageUrl) {
+    const ctx = canvas.getContext("2d");
+    const width = canvas.width;
+    const height = canvas.height;
+
+    let currentIndex = 0;
+    let imageLoaded = false;
+    const backgroundColor = "rgba(0, 0, 0, 0.03)";
+    const enterMessage = "Нажмите Enter, чтобы продолжить";
+
+    const image = new Image();
+    image.src = imageUrl;
+    image.onload = () => {
+      imageLoaded = true;
+      this.drawOverlay(
+        ctx,
+        width,
+        height,
+        backgroundColor,
+        image,
+        imageLoaded,
+        text,
+        currentIndex,
+        enterMessage,
+      );
+    };
+
+    const interval = this.startTyping(
+      text,
+      (index) => {
+        currentIndex = index;
+        this.drawOverlay(
+          ctx,
+          width,
+          height,
+          backgroundColor,
+          image,
+          imageLoaded,
+          text,
+          currentIndex,
+          enterMessage,
+        );
+      },
+      50,
+    );
+
+    canvas.setAttribute("tabindex", "0");
+    canvas.focus();
+    canvas.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  //showCanvasOverlay(canvas, text, imageUrl) {
+  //  const ctx = canvas.getContext("2d");
+  //  const width = canvas.width;
+  //  const height = canvas.height;
+  //
+  //  let currentIndex = 0;
+  //  let interval;
+  //  let imageLoaded = false;
+  //
+  //  const backgroundColor = "rgba(0, 0, 0, 0.03)";
+  //  const enterMessage = "Нажмите Enter, чтобы продолжить";
+  //
+  //  const image = new Image();
+  //  image.src = imageUrl;
+  //  image.onload = () => {
+  //    imageLoaded = true;
+  //    drawOverlay();
+  //  };
+  //
+  //  function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  //    const words = text.split(" ");
+  //    let line = "";
+  //    const lines = [];
+  //
+  //    for (let n = 0; n < words.length; n++) {
+  //      const testLine = line + words[n] + " ";
+  //      const metrics = context.measureText(testLine);
+  //      const testWidth = metrics.width;
+  //
+  //      if (testWidth > maxWidth && n > 0) {
+  //        lines.push(line);
+  //        line = words[n] + " ";
+  //      } else {
+  //        line = testLine;
+  //      }
+  //    }
+  //    lines.push(line);
+  //    lines.forEach((l, i) => {
+  //      context.fillText(l, x, y + i * lineHeight);
+  //    });
+  //  }
+  //
+  //  function drawOverlay() {
+  //    ctx.clearRect(0, 0, width, height);
+  //    ctx.fillStyle = backgroundColor;
+  //    ctx.fillRect(0, 0, width, height);
+  //
+  //    if (imageLoaded) {
+  //      const imgWidth = 200; // ширина изображения
+  //      const imgHeight = 200; // высота изображения
+  //      ctx.drawImage(
+  //        image,
+  //        (width - imgWidth) / 2,
+  //        (height - imgHeight) / 2 - 50,
+  //        imgWidth,
+  //        imgHeight,
+  //      );
+  //    }
+
+  //ctx.fillStyle = "#ffffff";
+  //    ctx.font = "24px Arial";
+  //    const displayedText = text.slice(0, currentIndex);
+  //    wrapText(ctx, displayedText, 50, height - 150, width - 100, 30);
+  //
+  //    ctx.font = "16px Arial";
+  //    ctx.fillText(enterMessage, 50, height - 50);
+  //  }
+  //
+  //  function startTyping() {
+  //    interval = setInterval(() => {
+  //      if (currentIndex < text.length) {
+  //        currentIndex++;
+  //        drawOverlay();
+  //      } else {
+  //        clearInterval(interval);
+  //      }
+  //    }, 100); // Интервал для эффекта печати текста
+  //  }
+  //
+  //  canvas.setAttribute("tabindex", "0");
+  //  canvas.focus();
+  //  canvas.addEventListener("keydown", this.handleKeyDown);
+  //
+  //  drawOverlay();
+  //  startTyping();
+  //}
+  //
+  clearOverlay() {
+    const canvas = document.getElementById("showcanvas");
+    const ctx = canvas.getContext("2d");
+    const width = canvas.width;
+    const height = canvas.height;
+    ctx.clearRect(0, 0, width, height);
+    canvas.removeEventListener("keydown", this.handleKeyDown);
+    this.gamePhase = GAME_PHASES.PLAY;
+    if (this.overlaycnt == 1) {
+      window.setTimeout(() => {
+        this.gamePhase = GAME_PHASES.PAUSE;
+        this.showCanvasOverlay(
+          document.getElementById("showcanvas"),
+          "Остерегайся этих разноцветных ветров, пока что они не сильные, но дальше будут становиться сильнее и все больше влиять на управляемость кораблём.",
+          "./images/bort.png",
+        );
+      }, 1000);
+      this.overlaycnt = 2;
+    }
+  }
+
+  handleKeyDown(event) {
+    console.log(this.overlay_typing);
+    if (event.key === "Enter" && !this.overlay_typing) {
+      this.clearOverlay();
+      //this.gamePhase = GAME_PHASES.PLAY;
+    }
   }
 
   SetLevel() {
@@ -442,6 +712,17 @@ class Game {
       window.setTimeout(() => {
         this.audio.Beep();
         this.graphics.timerText.innerHTML = "1";
+        if (this.level == 1 && this.showOverlay && this.overlaycnt == 0) {
+          window.setTimeout(() => {
+            this.gamePhase = GAME_PHASES.PAUSE;
+            this.showCanvasOverlay(
+              document.getElementById("showcanvas"),
+              "Что бы доставить груз, тебе нужно посадить корабль на посадочную площадку. Следи за скоростью корабля, если она будет не в зеленой зоне - корабль разобьётся.",
+              "./images/captain.png",
+            );
+          }, 3000);
+          this.overlaycnt = 1;
+        }
         window.setTimeout(() => {
           this.graphics.timerText.innerHTML = "";
           this.graphics.levelText.innerHTML = "";
@@ -494,6 +775,10 @@ class Game {
         "style",
         "width: auto; height: " + window.innerHeight + "px;",
       );
+      this.graphics.showcanvas.setAttribute(
+        "style",
+        "width: auto; height: " + window.innerHeight + "px;",
+      );
       this.graphics.fluidcanvas.setAttribute(
         "style",
         "width: auto; height: " + window.innerHeight + "px;",
@@ -508,6 +793,10 @@ class Game {
       );
     } else {
       this.graphics.backcanvas.setAttribute(
+        "style",
+        "width: " + window.innerWidth + "px; height: auto;",
+      );
+      this.graphics.showcanvas.setAttribute(
         "style",
         "width: " + window.innerWidth + "px; height: auto;",
       );
@@ -532,13 +821,6 @@ class Game {
       return;
     }
 
-    // Проверка уровня, возможно, эта часть нужна, если level объявлен
-    // if (v && this.level <= 0) {
-    //     level++;
-    //     SetLevel();
-    // }
-
-    // Обработка нажатий клавиш
     if (event.code === "KeyW" || event.code === "ArrowUp") {
       this.ukey = v; // Установка ключа вверх
       this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey); // Передача ключей в WASM
@@ -554,6 +836,7 @@ class Game {
     if (event.code === "KeyD" || event.code === "ArrowRight") {
       this.rkey = v; // Установка ключа вправо
       this.gameWasm._SetKeys(this.ukey, this.dkey, this.rkey, this.lkey);
+      //this.gamePhase = GAME_PHASES.PAUSE;
     }
   }
 
@@ -570,7 +853,6 @@ class Game {
       this.graphics.backctx.canvas.height,
     );
 
-    // Инициализация объекта памяти для WebAssembly
     let importOb = {
       env: {
         memory: new WebAssembly.Memory({ initial: 256, maximum: 256 }),
@@ -618,6 +900,7 @@ class Game {
 
       // Установите уровень и начните игровой цикл
       this.SetLevel();
+
       this.Loop(onLose);
     } catch (err) {
       alert(`Ошибка при загрузке WebAssembly: ${err}`);
@@ -665,31 +948,6 @@ class Game {
 
     return n;
   }
-
-  //GetDensityMap(x, y, offset) {
-  //  offset = offset | 0;
-  //  let n = 0;
-  //
-  //  let i = Math.floor(x / 33) | 0;
-  //  let j = Math.floor(y / 32) | 0;
-  //
-  //  for (let jj = j - 3; jj <= j + 3; jj++)
-  //    for (let ii = i - 3; ii <= i + 3; ii++) {
-  //      if (jj < 0) continue;
-  //      if (ii < 0) continue;
-  //      if (jj >= 17) continue;
-  //      if (ii >= 32) continue;
-  //      if (
-  //        ((this.maps[(ii >> 3) + jj * 4 + offset] >> (7 - (ii & 7))) & 1) ===
-  //        0
-  //      )
-  //        continue;
-  //
-  //      let r = (x - ii * 33) * (x - ii * 33) + (y - jj * 32) * (y - jj * 32);
-  //      n += Math.exp(-0.001 * r) * this.texture[jj * 32 + ii];
-  //    }
-  //  return n;
-  //}
 
   DrawMap(c, level) {
     const colors = [
@@ -741,44 +999,6 @@ class Game {
     }
   }
 
-  //DrawMap(c, level, color) {
-  //  let offset = 68 * level;
-  //  for (let j = 0; j < 512; j++)
-  //    for (let i = 0; i < 1024; i++) {
-  //      let n = this.GetDensityMap(i, j, offset);
-  //      let gradx = this.GetDensityMap(i + 1, j, offset) - n;
-  //      let grady = this.GetDensityMap(i, j + 1, offset) - n;
-  //      let rad = Math.sqrt(gradx * gradx + grady * grady);
-  //      if (rad < 0.0001) {
-  //        rad = 0;
-  //      } else {
-  //        rad = (gradx * 0.2) / rad;
-  //      }
-  //      let col = 0.8 + rad;
-  //      if (col > 1.0) col = 1.0;
-  //      if (col < 0.0) col = 0.0;
-  //
-  //      c.fillStyle =
-  //        "rgb(" +
-  //        ((color.r * col) | 0) +
-  //        "," +
-  //        ((color.g * col) | 0) +
-  //        "," +
-  //        ((color.b * col) | 0) +
-  //        ")";
-  //
-  //      if (n > 1.5) {
-  //        c.fillRect(i, j, 1, 1);
-  //      } else if (n > 1.3 && (i & 7) === 0 && (j & 7) === 0) {
-  //        c.translate(i, j);
-  //        //c.rotate(Math.random() * 2 * 3.141592);
-  //        c.rotate(i * j * n); // random value
-  //        c.fillRect(-8, -8, 1, 1);
-  //        c.resetTransform();
-  //      }
-  //    }
-  //}
-
   FillCenterText(c, str, y) {
     let x = 512 - 0.5 * c.measureText(str).width;
     c.fillStyle = "#00000040";
@@ -823,7 +1043,7 @@ class Game {
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(330, 178, 230, 10);
         c.font = "20px Arial";
-        //c.fillText("Посадочная платформа", 380, 170);
+        c.fillText("Посадочная платформа", 320, 210);
         let data = c.getImageData(0, 0, 1024, 512).data;
         //this.DrawBuilding(c, 880, 200, 65, 200);
         //this.DrawBuilding(c, 840, 250, 25, 150);
@@ -904,9 +1124,12 @@ class Game {
       case 1:
         this.gameWasm._Reset(
           this.level,
-          0x00ffffff,
-          0x00ffffff,
-          0xffeb8542,
+          0x000078a2,
+          0x000068a5,
+          0xff980063,
+          //0x0090a583,
+          //0x0094b9af,
+          //0xff11299b,
           40,
           40,
         );
@@ -1007,11 +1230,12 @@ class Game {
   }
 }
 
-const GameScreen = ({ levelNumber, onLose, onWin }) => {
+const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
   useEffect(() => {
     // Main(levelNumber, onLose);
     let level = LEVELS.find((level) => level.id === levelNumber);
     let image = new Image();
+    console.log(level);
     image.src = level.background_image;
     image.onload = () => {
       let ship = new Image();
@@ -1036,6 +1260,7 @@ const GameScreen = ({ levelNumber, onLose, onWin }) => {
           image,
           audio,
           ship,
+          showOverlay,
         );
         game.Main(levelNumber, onLose);
       };
@@ -1061,6 +1286,12 @@ const GameScreen = ({ levelNumber, onLose, onWin }) => {
         width="1024"
         height="512"
         style={{ zIndex: 3 }}
+      ></canvas>
+      <canvas
+        id="showcanvas"
+        width="1024"
+        height="512"
+        style={{ zIndex: 4 }}
       ></canvas>
 
       <svg id="svg" viewBox="0 0 256 128" style={{ zIndex: 4 }}>
