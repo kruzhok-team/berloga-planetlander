@@ -491,8 +491,8 @@ class Game {
     ctx.fillRect(0, 0, width, height);
 
     if (imageLoaded) {
-      const imgWidth = 500; // ширина изображения
-      const imgHeight = 500; // высота изображения
+      const imgWidth = 200; // ширина изображения
+      const imgHeight = 200; // высота изображения
       ctx.drawImage(
         image,
         (width - imgWidth) / 2,
@@ -534,6 +534,7 @@ class Game {
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
+    console.log(width, height);
 
     let currentIndex = 0;
     let imageLoaded = false;
@@ -681,10 +682,26 @@ class Game {
     this.gameWasm._FixCells();
   }
 
+  restoreCanvasFromImage(canvas, imageDataURL) {
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0); // Восстанавливаем содержимое
+    };
+    img.src = imageDataURL;
+  }
+
+  saveCanvasAsImage(canvas) {
+    return canvas.toDataURL(); // Сохраняем содержимое как Data URL
+  }
+
   Resize() {
     let scale = { x: 1, y: 1 };
     scale.x = window.innerWidth / this.graphics.fluidcanvas.width;
     scale.y = window.innerHeight / this.graphics.fluidcanvas.height;
+    //let savedContent = this.saveCanvasAsImage(
+    //  document.getElementById("showcanvas"),
+    //);
 
     if (scale.x > scale.y) {
       this.graphics.backcanvas.setAttribute(
@@ -701,6 +718,10 @@ class Game {
             this.graphics.backcanvas.offsetHeight +
             "px; z-index: 5;",
         );
+      document.getElementById("showcanvas").width =
+        this.graphics.backcanvas.offsetWidth;
+      document.getElementById("showcanvas").height =
+        this.graphics.backcanvas.offsetHeight;
       this.graphics.fluidcanvas.setAttribute(
         "style",
         "width: auto; height: " + window.innerHeight + "px;",
@@ -728,6 +749,11 @@ class Game {
             this.graphics.backcanvas.offsetHeight +
             "px; z-index: 5;",
         );
+      document.getElementById("showcanvas").width =
+        this.graphics.backcanvas.offsetWidth;
+      document.getElementById("showcanvas").height =
+        this.graphics.backcanvas.offsetHeight;
+
       this.graphics.fluidcanvas.setAttribute(
         "style",
         "height: auto; width: " + window.innerWidth + "px;",
@@ -741,6 +767,11 @@ class Game {
         "width: " + window.innerWidth + "px; height: auto;",
       );
     }
+
+    //this.restoreCanvasFromImage(
+    //  document.getElementById("showcanvas"),
+    //  savedContent,
+    //);
   }
 
   onkey(event, v) {
@@ -1215,10 +1246,16 @@ const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
       ></canvas>
 
       <svg id="svg" viewBox="0 0 256 128" style={{ zIndex: 4 }}>
-        <text id="timertext" textAnchor="middle" x="128" y="64"></text>
+        <text
+          id="timertext"
+          textAnchor="middle"
+          x="128"
+          y="64"
+          style={{ fill: "rgba(255,255,255)" }}
+        ></text>
         <text
           id="leveltext"
-          style={{ fontSize: "20px" }}
+          style={{ fontSize: "20px", fill: "rgba(255,255,255)" }}
           textAnchor="middle"
           x="128"
           y="124"
