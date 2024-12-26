@@ -689,13 +689,17 @@ class Game {
     if (scale.x > scale.y) {
       this.graphics.backcanvas.setAttribute(
         "style",
-        "width: auto; height: " + window.innerHeight + "px;",
+        "width: auto; height: " + window.innerHeight + "px; margin: auto",
       );
       document
         .getElementById("showcanvas")
         .setAttribute(
           "style",
-          "width: auto; height: " + window.innerHeight + "px;",
+          "width: " +
+            this.graphics.backcanvas.offsetWidth +
+            "px; height: " +
+            this.graphics.backcanvas.offsetHeight +
+            "px; z-index: 5;",
         );
       this.graphics.fluidcanvas.setAttribute(
         "style",
@@ -718,11 +722,15 @@ class Game {
         .getElementById("showcanvas")
         .setAttribute(
           "style",
-          "width: " + window.innerWidth + "px; height: auto;",
+          "width: " +
+            this.graphics.backcanvas.offsetWidth +
+            "px; height: " +
+            this.graphics.backcanvas.offsetHeight +
+            "px; z-index: 5;",
         );
       this.graphics.fluidcanvas.setAttribute(
         "style",
-        "width: " + window.innerWidth + "px; height: auto;",
+        "height: auto; width: " + window.innerWidth + "px;",
       );
       this.graphics.overlaycanvas.setAttribute(
         "style",
@@ -1169,12 +1177,23 @@ const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <canvas
         id="backcanvas"
         width="1024"
         height="512"
-        style={{ zIndex: 1 }}
+        style={{
+          zIndex: 1,
+          margin: "auto",
+        }}
       ></canvas>
       <canvas
         id="fluidcanvas"
@@ -1192,7 +1211,7 @@ const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
         id="showcanvas"
         width="1024"
         height="512"
-        style={{ zIndex: 4 }}
+        style={{ zIndex: 5 }}
       ></canvas>
 
       <svg id="svg" viewBox="0 0 256 128" style={{ zIndex: 4 }}>
