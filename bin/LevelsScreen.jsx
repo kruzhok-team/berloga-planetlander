@@ -7,23 +7,46 @@ const getLevelById = (id) => {
 };
 
 const renderLines = (level) => {
-  const lines = [];
-  level.children.forEach((childId) => {
+  return level.children.map((childId) => {
     const childLevel = getLevelById(childId);
-    lines.push(
+
+    if (!childLevel) {
+      console.warn(`Child level with ID ${childId} not found.`);
+      return null; // Если дочерний уровень не найден, пропускаем
+    }
+
+    return (
       <line
         key={`line-${level.id}-${childId}`}
-        x1={level.x}
-        y1={level.y}
-        x2={childLevel.x}
-        y2={childLevel.y}
+        x1={`${level.x}%`} // Используем проценты для адаптивности
+        y1={`${level.y}%`}
+        x2={`${childLevel.x}%`}
+        y2={`${childLevel.y}%`}
         stroke="rgba(255, 255, 255, 0.3)"
-        strokeWidth="2"
-      />,
+        strokeWidth="0.5%" // Относительная ширина для адаптивности
+      />
     );
   });
-  return lines;
 };
+
+//const renderLines = (level) => {
+//  const lines = [];
+//  level.children.forEach((childId) => {
+//    const childLevel = getLevelById(childId);
+//    lines.push(
+//      <line
+//        key={`line-${level.id}-${childId}`}
+//        x1={level.x}
+//        y1={level.y}
+//        x2={childLevel.x}
+//        y2={childLevel.y}
+//        stroke="rgba(255, 255, 255, 0.3)"
+//        strokeWidth="2"
+//      />,
+//    );
+//  });
+//  return lines;
+//};
 const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
   //const levelManager = new LevelManager(levelsInit);
   levelsData = levelD;
@@ -63,14 +86,59 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
         <svg
           width="100%"
           height="100%"
-          //viewBox="0 0 800 800" // Задаем фиксированный размер для точной центровки
-          style={
-            {
-              //maxWidth: "800px", // Ограничиваем максимальную ширину SVG
-              //maxHeight: "800px", // Ограничиваем максимальную высоту SVG
-            }
-          }
+          viewBox="0 0 1000 1000" // Установите виртуальные размеры для масштабирования
+          preserveAspectRatio="xMidYMid meet"
         >
+          {levelsData.map((level) => {
+            const isActive = level.id === activeLevelId;
+            const size = isActive ? 7 : 6; // Размеры как проценты от viewBox
+            return (
+              <React.Fragment key={level.id}>
+                <g
+                  onClick={
+                    level.lock ? () => {} : () => onLevelSelect(level.id)
+                  }
+                  onMouseEnter={() => setActiveLevelId(level.id)}
+                  onMouseLeave={() => setActiveLevelId(null)}
+                  style={{
+                    cursor: level.lock ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <image
+                    href={level.lock ? "./images/lock.svg" : level.image}
+                    x={`${level.x - size / 2}%`} // Расчет позиций в процентах
+                    y={`${level.y - size / 2}%`}
+                    width={`${size}%`}
+                    height={`${size}%`}
+                  />
+                  {/*<text
+                    x={`${level.x}%`}
+                    y={`${level.y + size}%`}
+                    fontSize="1.6%"
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {level.id}
+                  </text>*/}
+                  <text
+                    x={`${level.x}%`}
+                    y={`${level.y + size}%`}
+                    fontSize="100%"
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {level.name}
+                  </text>
+                </g>
+                {renderLines(level)}
+              </React.Fragment>
+            );
+          })}
+        </svg>
+
+        {/*<svg width="100%" height="100%" style={{}}>
           {levelsData.map((level) => {
             const isActive = level.id === activeLevelId;
             return (
@@ -91,12 +159,6 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
                     y={level.y - 30}
                     width={isActive ? 70 : 60} // Базовый размер
                     height={isActive ? 70 : 60}
-                    //style={{
-                    //transition: "r 0.3s ease-in-out",
-                    //transform: isActive ? "scale(1.33)" : "scale(1)", // Увеличение на 33%
-                    //transformOrigin: "center", // Центр как точка трансформации
-                    //transition: "transform 0.3s ease-in-out", // Плавность увеличения
-                    //}}
                   />
                   <text
                     x={level.x}
@@ -122,54 +184,8 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
                 {renderLines(level)}
               </React.Fragment>
             );
-
-            //return (
-            //  <React.Fragment key={level.id}>
-            //    <g
-            //      onClick={() => onLevelSelect(level.id)}
-            //      onMouseEnter={() => setActiveLevelId(level.id)}
-            //      onMouseLeave={() => setActiveLevelId(null)}
-            //      style={{
-            //        cursor: "pointer",
-            //      }}
-            //    >
-            //      <circle
-            //        cx={level.x}
-            //        cy={level.y}
-            //        r={isActive ? 40 : 30}
-            //        fill="rgba(255, 255, 255, 0.1)"
-            //        stroke="rgba(255, 255, 255, 0.5)"
-            //        strokeWidth="2"
-            //        style={{
-            //          transition: "r 0.3s ease-in-out",
-            //        }}
-            //      />
-            //      <text
-            //        x={level.x}
-            //        y={level.y + 5}
-            //        fontSize="16"
-            //        fill="white"
-            //        textAnchor="middle"
-            //        dominantBaseline="middle"
-            //      >
-            //        {level.id}
-            //      </text>
-            //      <text
-            //        x={level.x}
-            //        y={level.y + 50}
-            //        fontSize="14"
-            //        fill="white"
-            //        textAnchor="middle"
-            //        dominantBaseline="middle"
-            //      >
-            //        {level.name}
-            //      </text>
-            //    </g>
-            //    {renderLines(level)}
-            //  </React.Fragment>
-            //);
           })}
-        </svg>
+        </svg>*/}
       </div>
       <button
         onClick={onBack}
