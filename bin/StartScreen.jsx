@@ -28,7 +28,7 @@ const StartScreen = ({ onStart, onAbout }) => (
         textAlign: "center",
       }}
     >
-      Межпланетная почта
+      Берлога: Космическая доставка
     </p>
     <p
       style={{
