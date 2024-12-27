@@ -699,9 +699,9 @@ class Game {
     let scale = { x: 1, y: 1 };
     scale.x = window.innerWidth / this.graphics.fluidcanvas.width;
     scale.y = window.innerHeight / this.graphics.fluidcanvas.height;
-    let savedContent = this.saveCanvasAsImage(
-      document.getElementById("showcanvas"),
-    );
+    //let savedContent = this.saveCanvasAsImage(
+    //  document.getElementById("showcanvas"),
+    //);
 
     if (scale.x > scale.y) {
       this.graphics.backcanvas.setAttribute(
