@@ -13,7 +13,7 @@ const levelsInit = [
   {
     id: 1,
     name: "Берлога. Первая миссия",
-    x: 10,
+    x: 5,
     y: 60,
     children: [2],
     image: "./images/berloga.png",
@@ -22,7 +22,7 @@ const levelsInit = [
   {
     id: 2,
     name: "Берлога. Гравитация",
-    x: 30,
+    x: 25,
     y: 55,
     children: [3],
     image: "./images/berloga.png",
@@ -32,7 +32,7 @@ const levelsInit = [
   {
     id: 3,
     name: "Берлога. Поправка на ветер",
-    x: 50,
+    x: 45,
     y: 45,
     children: [4],
     image: "./images/berloga.png",
@@ -43,7 +43,7 @@ const levelsInit = [
   {
     id: 4,
     name: "Берлога. Опасная доставка",
-    x: 62,
+    x: 57,
     y: 52,
     children: [5],
     image: "./images/berloga.png",
@@ -54,7 +54,7 @@ const levelsInit = [
   {
     id: 5,
     name: "Цетос. Посадка на гигант",
-    x: 74,
+    x: 69,
     y: 57,
     children: [6],
     image: "./images/cetos.png",
@@ -75,7 +75,7 @@ const levelsInit = [
     id: 7,
     name: "Цетос. Доставка в каньон",
     x: 87,
-    y: 72,
+    y: 71,
     children: [8],
     image: "./images/cetos.png",
     showOverlay: false,
@@ -85,7 +85,7 @@ const levelsInit = [
   {
     id: 8,
     name: "Тетис. Водный мир",
-    x: 77,
+    x: 72,
     y: 70,
     children: [],
     image: "./images/tetic.png",

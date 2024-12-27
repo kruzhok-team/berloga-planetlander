@@ -91,7 +91,7 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
         >
           {levelsData.map((level) => {
             const isActive = level.id === activeLevelId;
-            const size = isActive ? 7 : 6; // Размеры как проценты от viewBox
+            const size = isActive ? 9 : 8; // Размеры как проценты от viewBox
             return (
               <React.Fragment key={level.id}>
                 <g
@@ -123,8 +123,8 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
                   </text>*/}
                   <text
                     x={`${level.x}%`}
-                    y={`${level.y + size}%`}
-                    fontSize="100%"
+                    y={`${level.y + size - 2}%`}
+                    fontSize="115%"
                     fill="white"
                     textAnchor="middle"
                     dominantBaseline="middle"
