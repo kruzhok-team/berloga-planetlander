@@ -12,7 +12,8 @@ import LevelManager from "./progress.jsx";
 const levelsInit = [
   {
     id: 1,
-    name: "Берлога. Первая миссия",
+    name: "Берлога:",
+    desc: "Первая миссия",
     x: 10,
     y: 60,
     children: [2],
@@ -21,7 +22,8 @@ const levelsInit = [
   },
   {
     id: 2,
-    name: "Берлога. Гравитация",
+    name: "Берлога:",
+    desc: "Гравитация",
     x: 25,
     y: 55,
     children: [3],
@@ -31,7 +33,8 @@ const levelsInit = [
   },
   {
     id: 3,
-    name: "Берлога. Поправка на ветер",
+    name: "Берлога:",
+    desc: "Поправка на ветер",
     x: 45,
     y: 45,
     children: [4],
@@ -42,7 +45,8 @@ const levelsInit = [
   },
   {
     id: 4,
-    name: "Берлога. Опасная доставка",
+    name: "Берлога:",
+    desc: "Опасная доставка",
     x: 57,
     y: 52,
     children: [5],
@@ -53,7 +57,8 @@ const levelsInit = [
   },
   {
     id: 5,
-    name: "Цетос. Посадка на гигант",
+    name: "Цетос:",
+    desc: "Посадка на гигант",
     x: 69,
     y: 57,
     children: [6],
@@ -63,7 +68,8 @@ const levelsInit = [
   },
   {
     id: 6,
-    name: "Цетос. Мастерство манёвра",
+    name: "Цетос:",
+    desc: "Мастерство манёвра",
     x: 90,
     y: 57,
     children: [7],
@@ -73,7 +79,8 @@ const levelsInit = [
   },
   {
     id: 7,
-    name: "Цетос. Доставка в каньон",
+    name: "Цетос:",
+    desc: "Доставка в каньон",
     x: 87,
     y: 71,
     children: [8],
@@ -84,7 +91,8 @@ const levelsInit = [
   },
   {
     id: 8,
-    name: "Тетис. Водный мир",
+    name: "Тетис:",
+    desc: "Водный мир",
     x: 72,
     y: 70,
     children: [],

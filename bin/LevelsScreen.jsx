@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 let levelsData = [];
 
@@ -47,12 +47,50 @@ const renderLines = (level) => {
 //  });
 //  return lines;
 //};
+
+function Resize() {
+  //document.getElementById("svglevels").width = window.innerHeight;
+  //document.getElementById("svglevels").height = window.innerHeight;
+  document
+    .getElementById("svglevels")
+    .setAttribute(
+      "style",
+      "view-box: 0 0 " +
+        window.innerHeight +
+        " " +
+        window.innerHeight +
+        "; width: " +
+        window.innerHeight +
+        " px; height: " +
+        window.innerHeight +
+        " px;",
+    );
+}
+
+async function res() {
+  Resize();
+  window.addEventListener("resize", () => Resize());
+}
+
 const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
-  //const levelManager = new LevelManager(levelsInit);
   levelsData = levelD;
   console.log(levelD);
 
   const [activeLevelId, setActiveLevelId] = useState(null);
+
+  useEffect(() => {
+    // Выполнить Resize при монтировании компонента
+    Resize();
+
+    // Добавить слушатель события изменения размера окна
+    const handleResize = () => Resize();
+    window.addEventListener("resize", handleResize);
+
+    // Удалить слушатель при размонтировании компонента
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div
@@ -86,6 +124,7 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
         }}
       >
         <svg
+          id="svglevels"
           width="100%"
           height="100%"
           //viewBox="0 0 1000 1000" // Установите виртуальные размеры для масштабирования
@@ -116,16 +155,6 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
                     width={`${size}%`}
                     height={`${size}%`}
                   />
-                  {/*<text
-                    x={`${level.x}%`}
-                    y={`${level.y + size}%`}
-                    fontSize="1.6%"
-                    fill="white"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                  >
-                    {level.id}
-                  </text>*/}
                   <text
                     x={`${level.x}%`}
                     y={`${level.y + size - 2}%`}
@@ -135,6 +164,16 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
                     dominantBaseline="middle"
                   >
                     {level.name}
+                  </text>
+                  <text
+                    x={`${level.x}%`}
+                    y={`${level.y + size + 1}%`}
+                    fontSize="115%"
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {level.desc}
                   </text>
                 </g>
                 {renderLines(level)}
