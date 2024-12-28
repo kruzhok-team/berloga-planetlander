@@ -13,7 +13,7 @@ const levelsInit = [
   {
     id: 1,
     name: "Берлога. Первая миссия",
-    x: 5,
+    x: 10,
     y: 60,
     children: [2],
     image: "./images/berloga.png",

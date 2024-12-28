@@ -75,9 +75,11 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
     >
       <div
         style={{
+          padding: "20px",
           flex: 1,
           position: "relative",
           width: "100%",
+          height: "100%",
           display: "flex",
           justifyContent: "center", // Центровка SVG
           alignItems: "center", // Вертикальная центровка SVG
@@ -86,8 +88,11 @@ const LevelScreen = ({ onLevelSelect, onBack, levelD }) => {
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 1000 1000" // Установите виртуальные размеры для масштабирования
+          //viewBox="0 0 1000 1000" // Установите виртуальные размеры для масштабирования
           preserveAspectRatio="xMidYMid meet"
+          style={{
+            padding: "20px",
+          }}
         >
           {levelsData.map((level) => {
             const isActive = level.id === activeLevelId;

@@ -28,7 +28,20 @@ const StartScreen = ({ onStart, onAbout }) => (
         textAlign: "center",
       }}
     >
-      Берлога: Космическая доставка
+      Берлога:
+    </p>
+    <p
+      style={{
+        margin: 0,
+        padding: "0 10%",
+        fontFamily: "Arial",
+        fontSize: "4vw",
+        fontWeight: "bold",
+        maxWidth: "90%",
+        textAlign: "center",
+      }}
+    >
+      Космическая доставка
     </p>
     <p
       style={{
