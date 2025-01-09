@@ -67,6 +67,20 @@ const LEVELS = [
     ship_image: "./images/ship.svg",
     //ship_image: "./ship_image.png",
   },
+  {
+    id: 9,
+    name: "Девятый уровень",
+    background_image: "./images/background3.svg",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
+  },
+  {
+    id: 10,
+    name: "Десятый уровень",
+    background_image: "./images/background3.svg",
+    ship_image: "./images/ship.svg",
+    //ship_image: "./ship_image.png",
+  },
 ];
 
 class Game {
@@ -1061,6 +1075,41 @@ class Game {
         this.DrawMap(c, 7, { r: 0xb8, g: 0x69, b: 0x72 });
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(85, 460, 80, 10);
+        break;
+      case 9:
+        this.gameWasm._ShipSetActive();
+        this.DrawMap(c, 8, { r: 0xb8, g: 0x69, b: 0x72 });
+        c.fillStyle = "#FFFFFFFF";
+        c.fillRect(840, 273, 80, 10);
+        break;
+      case 10:
+        this.gameWasm._ShipSetActive();
+        this.DrawMap(c, 9, { r: 0xb8, g: 0x69, b: 0x72 });
+        c.fillStyle = "#FFFFFFFF";
+        c.fillRect(840, 273, 80, 10);
+        break;
+      case 9:
+        this.gameWasm._Reset(
+          this.level,
+          0x0053942a94,
+          0x009269d4,
+          0xff8d4f8d,
+          20,
+          70,
+        );
+        this.gameWasm._ShipSetActive();
+        break;
+
+      case 10:
+        this.gameWasm._Reset(
+          this.level,
+          0x0053942a94,
+          0x009269d4,
+          0xff8d4f8d,
+          20,
+          70,
+        );
+        this.gameWasm._ShipSetActive();
         break;
     }
   }

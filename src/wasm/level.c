@@ -204,10 +204,35 @@ void SetLevelStep(int level, float dt) {
     break;
 
   case 9: // end screen
-    time2 -= dt;
-    if (time2 < 0) {
-      Explode(rand() & 255, rand() & 127);
-      time2 += 3;
+    velocityColorScale = 20.;
+    velocityColorOffset = 0.6;
+    shadingStrength = 0.15;
+
+    SetFluidVelocity(1, N - 2, 4, dt);
+    SetFluidVelocity(2, N - 8, 95, dt);
+
+    break;
+
+  case 10:
+    windInfluence = 0.05;
+    velocityColorScale = 20.;
+    velocityColorOffset = 0.6;
+    shadingStrength = 0.5;
+
+    for (int i = 20; i <= 40; i++) {
+      vy[M - 23][i] = -0.4;
+      density2[M - 23][i] += 1.f * dt;
+      density2[M - 22][i] += 1.f * dt;
+      density2[M - 21][i] += 0.2f * dt;
+      density2[M - 20][i] += 0.2f * dt;
+    }
+
+    for (int i = 128 - 10; i <= 128 + 10; i++) {
+      vy[M - 23][i] = -0.4;
+      density2[M - 23][i] += 1.f * dt;
+      density2[M - 22][i] += 1.f * dt;
+      density2[M - 21][i] += 0.2f * dt;
+      density2[M - 20][i] += 0.2f * dt;
     }
     break;
 
