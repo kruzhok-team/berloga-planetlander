@@ -7,7 +7,7 @@ const AboutScreen = ({ onBack }) => (
       height: "100vh",
       color: "white",
       textAlign: "center",
-      backgroundImage: 'url("main_background.svg")',
+      backgroundImage: 'url("background4.svg")',
       backgroundSize: "cover",
       backgroundPosition: "center",
       fontFamily: "Arial, sans-serif",
@@ -93,6 +93,9 @@ const AboutScreen = ({ onBack }) => (
           </p>
           <p style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}>
             D - Вправо
+          </p>
+          <p style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}>
+            Пробел (Space) - Выключить / Включить звук
           </p>
         </div>
 

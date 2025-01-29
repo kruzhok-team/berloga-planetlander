@@ -8,7 +8,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         {
           character: "Капитан Сайда",
           imageUrl: "./images/captain.png",
-          text: "Привет, пилот! Я капитан Сайда, буду помогать тебе и направлять на давать задания. А это бортовой компьютер, он будет сопровождать тебя на миссиях",
+          text: "Привет, пилот! Я капитан Сайда, буду помогать тебе и направлять на задания. А это бортовой компьютер, он будет сопровождать тебя на миссиях.",
         },
         {
           character: "Бортовой компьютер",
@@ -38,7 +38,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         {
           character: "Капитан Сайда",
           imageUrl: "./images/captain.png",
-          text: "Тебе нужно доставить груз на соседнюю площадку. Привыкай - гравитация у нас не такая сильная, как на Цетосе, но больше, чем на Тетисе",
+          text: "Тебе нужно доставить груз на соседнюю площадку. Привыкай - гравитация у нас не такая сильная, как на Цетосе, но больше, чем на Тетисе.",
         },
         {
           character: "Пилот",
@@ -193,12 +193,12 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         {
           character: "Капитан Сайда",
           imageUrl: "./images/captain.png",
-          text: "Следующий пункт назначения - Тетис! Тут ты сможешь передохнуть и поболтать лапами в тёплой воде",
+          text: "Следующий пункт назначения - Тетис! Тут ты сможешь передохнуть и поболтать лапами в тёплой воде.",
         },
         {
           character: "Бортовой компьютер",
           imageUrl: "./images/captain.png",
-          text: "Тетис — вторая планета, которую мы начали исследовать и заселять. Океанская планета, населённая сотнями видами рыб и рептилий. А из-за небольшой гравитации медведи тут почти порхают",
+          text: "Тетис — вторая планета, которую мы начали исследовать и заселять. Океанская планета, населённая сотнями видами рыб и рептилий. А из-за небольшой гравитации медведи тут почти порхают.",
         },
       ],
     },
@@ -361,7 +361,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
         height: "100vh",
         color: "white",
         textAlign: "center",
-        backgroundImage: 'url("main_background.svg")',
+        backgroundImage: 'url("background4.svg")',
         backgroundSize: "cover",
         backgroundPosition: "center",
         fontFamily: "Arial, sans-serif",
@@ -402,6 +402,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
             <h2
               style={{
                 fontSize: "24px",
+                fontFamily: "Arial",
                 fontWeight: "bold",
                 marginBottom: "10px",
               }}
@@ -409,7 +410,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
               {currentReplic.character}
             </h2>
             <p
-              style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}
+              style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0", fontFamily: "Arial" }}
             >
               {displayedText}
             </p>
@@ -467,6 +468,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
               cursor: "pointer",
               transition: "all 0.3s ease",
               outline: "none",
+              fontFamily: "Arial"
             }}
             onMouseOver={(e) => {
               e.target.style.background =
@@ -496,6 +498,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
               cursor: "pointer",
               transition: "all 0.3s ease",
               outline: "none",
+              fontFamily: "Arial"
             }}
             onMouseOver={(e) => {
               e.target.style.background =
@@ -535,6 +538,7 @@ const CutsceneScreen = ({ level, onBack, onNext }) => {
               borderRadius: "10px",
               cursor: "pointer",
               transition: "all 0.3s ease",
+              fontFamily: "Arial"
             }}
             onMouseOver={(e) => {
               e.target.style.background =

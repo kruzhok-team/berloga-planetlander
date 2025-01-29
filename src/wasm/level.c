@@ -217,10 +217,10 @@ void SetLevelStep(int level, float dt) {
     windInfluence = 0.05;
     velocityColorScale = 20.;
     velocityColorOffset = 0.6;
-    shadingStrength = 0.5;
+    shadingStrength = 0.1;
 
     for (int i = 20; i <= 40; i++) {
-      vy[M - 23][i] = -0.4;
+      vy[M - 23][i] = -0.3;
       density2[M - 23][i] += 1.f * dt;
       density2[M - 22][i] += 1.f * dt;
       density2[M - 21][i] += 0.2f * dt;
@@ -228,7 +228,7 @@ void SetLevelStep(int level, float dt) {
     }
 
     for (int i = 128 - 10; i <= 128 + 10; i++) {
-      vy[M - 23][i] = -0.4;
+      vy[M - 23][i] = -0.3;
       density2[M - 23][i] += 1.f * dt;
       density2[M - 22][i] += 1.f * dt;
       density2[M - 21][i] += 0.2f * dt;

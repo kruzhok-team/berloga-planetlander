@@ -3,7 +3,7 @@ class LevelManager {
     this.storageKey = "gameLevels";
     this.levels = initialLevels.map((level) => ({
       ...level,
-      lock: true,
+      lock: false,
       complete: false,
     }));
     this.levels[0].lock = false;

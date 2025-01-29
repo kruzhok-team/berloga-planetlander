@@ -142,6 +142,21 @@ class AudioClass {
     gain.gain.value = 0;
   }
 
+    Enable() {
+    if (!this.initialized) return;
+    if (this.audioContext.state === "suspended") {
+      this.audioContext.resume();
+    }
+  }
+
+    Disable() {
+    if (!this.initialized) return;
+    if (this.audioContext.state === "running") {
+      this.audioContext.suspend();
+    }
+  }
+
+
   EnableDisable() {
     if (!this.initialized) return;
     if (this.audioContext.state === "running") {

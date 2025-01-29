@@ -545,6 +545,7 @@ class Game {
   }
 
   showCanvasOverlay(canvas, text, imageUrl) {
+    this.audio.EnableDisable();
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
@@ -601,6 +602,7 @@ class Game {
     const width = canvas.width;
     const height = canvas.height;
     ctx.clearRect(0, 0, width, height);
+        this.audio.EnableDisable();
     canvas.removeEventListener("keydown", this.handleKeyDown);
     this.gamePhase = GAME_PHASES.PLAY;
     if (this.overlaycnt == 1) {
@@ -608,7 +610,7 @@ class Game {
         this.gamePhase = GAME_PHASES.PAUSE;
         this.showCanvasOverlay(
           document.getElementById("showcanvas"),
-          "Остерегайся этих разноцветных ветров, пока что они не сильные, но дальше будут становиться сильнее и все больше влиять на управляемость кораблём.",
+          "Остерегайся этих разноцветных ветров, пока что они не сильные, но дальше будут становиться сильнее и все больше влиять на управляемость кораблём..",
           "./images/bort.png",
         );
       }, 1000);
@@ -649,7 +651,7 @@ class Game {
             this.gamePhase = GAME_PHASES.PAUSE;
             this.showCanvasOverlay(
               document.getElementById("showcanvas"),
-              "Что бы доставить груз, тебе нужно посадить корабль на посадочную площадку. Следи за скоростью корабля, если она будет не в зеленой зоне - корабль разобьётся.",
+              "Что бы доставить груз, тебе нужно посадить корабль на посадочную площадку. Следи за скоростью корабля, если она будет не в зеленой зоне - корабль разобьётся. Для управления используй клавиши AWSD на клавиатуре..",
               "./images/captain.png",
             );
           }, 3000);
@@ -1088,29 +1090,6 @@ class Game {
         c.fillStyle = "#FFFFFFFF";
         c.fillRect(840, 273, 80, 10);
         break;
-      case 9:
-        this.gameWasm._Reset(
-          this.level,
-          0x0053942a94,
-          0x009269d4,
-          0xff8d4f8d,
-          20,
-          70,
-        );
-        this.gameWasm._ShipSetActive();
-        break;
-
-      case 10:
-        this.gameWasm._Reset(
-          this.level,
-          0x0053942a94,
-          0x009269d4,
-          0xff8d4f8d,
-          20,
-          70,
-        );
-        this.gameWasm._ShipSetActive();
-        break;
     }
   }
 
@@ -1210,6 +1189,29 @@ class Game {
         );
         this.gameWasm._ShipSetActive();
         break;
+      case 9:
+        this.gameWasm._Reset(
+          this.level,
+          0x0053942a94,
+          0x009269d4,
+          0xff8d4f8d,
+          20,
+          70,
+        );
+        this.gameWasm._ShipSetActive();
+        break;
+
+      case 10:
+        this.gameWasm._Reset(
+          this.level,
+          0x0053942a94,
+          0x009269d4,
+          0xff8d4f8d,
+          20,
+          70,
+        );
+        this.gameWasm._ShipSetActive();
+        break;
     }
   }
 
@@ -1304,7 +1306,7 @@ const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
         ></text>
         <text
           id="leveltext"
-          style={{ fontSize: "20px", fill: "rgba(255,255,255)" }}
+          style={{ fontSize: "20px", fill: "rgba(255,255,255)", fontFamily: "Arial" }}
           textAnchor="middle"
           x="128"
           y="124"
@@ -1344,51 +1346,55 @@ const GameScreen = ({ levelNumber, onLose, onWin, showOverlay }) => {
           id="shipsleft"
           x="5"
           y="18"
-          style={{ fill: "rgba(255,255,255)" }}
+          style={{ fill: "rgba(255,255,255)" , fontFamily: "Arial"}}
         ></text>
-
         <g id="velocitybar">
-          <rect
-            x="240"
-            y="10"
-            width="5"
-            height="100"
-            style={{
-              fill: "rgba(255,255,255,0.2)",
-              strokeWidth: 0.5,
-              stroke: "rgb(0,0,0)",
-            }}
-          ></rect>
-          <rect
-            x="240"
-            y="60"
-            width="5"
-            height="10"
-            style={{ fill: "rgba(0,255,0,0.8)", strokeWidth: 0 }}
-          ></rect>
-          <text x="236" y="62" style={{ fontSize: "5px" }}>
-            0
-          </text>
-          <g className="v">
-            {[...Array(25)].map((_, index) => (
-              <line
-                key={index}
-                x1="240"
-                y1={15 + index * 5}
-                x2="242"
-                y2={15 + index * 5}
-              />
-            ))}
-          </g>
-          <line
-            id="velocity"
-            x1="240"
-            y1="60"
-            x2="245"
-            y2="60"
-            style={{ stroke: "rgb(255,255,255)", strokeWidth: 1 }}
-          />
-        </g>
+  <rect
+    x="240"
+    y="10"
+    width="5"
+    height="100"
+    style={{
+      fill: "rgba(255,255,255,0.2)",
+      strokeWidth: 0.5,
+      stroke: "rgb(0,0,0)",
+    }}
+  ></rect>
+
+  <rect
+    x="240"
+    y="60"
+    width="5"
+    height="10"
+    style={{ fill: "rgba(0,255,0,0.8)", strokeWidth: 0 }}
+  ></rect>
+
+  <text x="236" y="62" style={{ fontSize: "5px" }}>
+    0
+  </text>
+
+  <g className="v">
+    {[...Array(20)].map((_, index) => (
+      <line
+        key={index}
+        x1="240"
+        y1={10 + index * 5}
+        x2="242"
+        y2={10 + index * 5}
+        style={{ stroke: "rgb(0,0,0)", strokeWidth: 0.5 }}
+      />
+    ))}
+  </g>
+
+  <line
+    id="velocity"
+    x1="240"
+    y1="60"
+    x2="245"
+    y2="60"
+    style={{ stroke: "rgb(255,255,255)", strokeWidth: 1 }}
+  />
+</g>
       </svg>
     </div>
   );
