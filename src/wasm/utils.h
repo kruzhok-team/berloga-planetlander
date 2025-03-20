@@ -8,7 +8,7 @@ typedef struct
 
 typedef struct
 {
-    float r, g, b;
+    float r, g, b, a;
 } Color;
 
 unsigned int Color2RGB(Color c);

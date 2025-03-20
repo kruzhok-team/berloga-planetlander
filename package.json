@@ -1,0 +1,30 @@
+{
+  "name": "berloga-planetlander",
+  "version": "1.0.0",
+  "description": "<h3 align=\"center\">Berloga Planetlander</h3>",
+  "main": "index.js",
+  "bin": {
+    "berloga-planetlander": "bin/audio.js"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "perlin-noise": "^0.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "simplex-noise": "^4.0.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
+    "babel-loader": "^9.2.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

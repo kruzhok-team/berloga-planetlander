@@ -14,55 +14,58 @@ float** AllocArray(int N, int M)
     return f;
 }
 
-Color RGB2Color(int color)
-{
+Color RGB2Color(int color) {
     Color c;
-    c.r = ((float)((color >> 0) & 0xFF))/255.f;
-    c.g = ((float)((color >> 8) & 0xFF))/255.f;
-    c.b = ((float)((color >> 16) & 0xFF))/255.f;
+    /*c.a = 1.0f;*/
+    c.a = ((float)((color >> 24) & 0xFF)) / 255.f; // Извлечение альфа-канала
+    c.r = ((float)((color >> 0) & 0xFF)) / 255.f;
+    c.g = ((float)((color >> 8) & 0xFF)) / 255.f;
+    c.b = ((float)((color >> 16) & 0xFF)) / 255.f;
     return c;
 }
 
-unsigned int Color2RGB(Color c)
-{
+unsigned int Color2RGB(Color c) {
     if (c.r > 1.) c.r = 1;
     if (c.g > 1.) c.g = 1;
     if (c.b > 1.) c.b = 1;
+    if (c.a > 1.) c.a = 1; // Проверка для альфа-канала
     if (c.r < 0.) c.r = 0;
     if (c.g < 0.) c.g = 0;
     if (c.b < 0.) c.b = 0;
+    if (c.a < 0.) c.a = 0; // Проверка для альфа-канала
     
-    return 0xFF000000 | ((int)(c.b * 255.)<<16) | ((int)(c.g * 255.)<<8) | ((int)(c.r * 255.));
+    return ((int)(c.a * 255.) << 24) | ((int)(c.b * 255.) << 16) | ((int)(c.g * 255.) << 8) | ((int)(c.r * 255.));
 }
 
-void AddDensity(Color *c, Color *gasc, float d)
-{
+void AddDensity(Color *c, Color *gasc, float d) {
     if (d < 0.01f) return;
     if (d > 1.) d = 1.f;
     c->r = c->r * (1.f - d) + gasc->r * d;
     c->g = c->g * (1.f - d) + gasc->g * d;
     c->b = c->b * (1.f - d) + gasc->b * d;
+    // Применение альфа-канала
+    c->a = c->a * (1.f - d) + gasc->a * d;
+    /*c->a = gasc->a * d;*/
 }
 
-
-void ColorInterpolate(Color *c, Color *lowc, Color *highc, float d)
-{
-    c->r = lowc->r + (highc->r-lowc->r)*d;
-    c->g = lowc->g + (highc->g-lowc->g)*d;
-    c->b = lowc->b + (highc->b-lowc->b)*d;
+void ColorInterpolate(Color *c, Color *lowc, Color *highc, float d) {
+    c->r = lowc->r + (highc->r - lowc->r) * d;
+    c->g = lowc->g + (highc->g - lowc->g) * d;
+    c->b = lowc->b + (highc->b - lowc->b) * d;
+    c->a = lowc->a + (highc->a - lowc->a) * d; // Интерполяция альфа-канала
 }
 
-
-void AddDensityInterpolate(Color *c, Color *gaslowc, Color *gashighc, float d)
-{
+void AddDensityInterpolate(Color *c, Color *gaslowc, Color *gashighc, float d) {
     if (d < 0.01) return;
-    float dint = 1.f-expf_fast(-d*0.5f);
+    float dint = 1.f - expf_fast(-d * 0.5f);
     if (d > 1.) d = 1.f;
-    c->r = c->r * (1.f - d) + (gaslowc->r + (gashighc->r-gaslowc->r)*dint) * d;
-    c->g = c->g * (1.f - d) + (gaslowc->g + (gashighc->g-gaslowc->g)*dint) * d;
-    c->b = c->b * (1.f - d) + (gaslowc->b + (gashighc->b-gaslowc->b)*dint) * d;
+    c->r = c->r * (1.f - d) + (gaslowc->r + (gashighc->r - gaslowc->r) * dint) * d;
+    c->g = c->g * (1.f - d) + (gaslowc->g + (gashighc->g - gaslowc->g) * dint) * d;
+    c->b = c->b * (1.f - d) + (gaslowc->b + (gashighc->b - gaslowc->b) * dint) * d;
+    c->a = c->a * (1.f - d) + (gaslowc->a + (gashighc->a - gaslowc->a) * dint) * d; // Интерполяция альфа-канала
+    /*c->a = 1.f;*/
+    /*c->a = (gaslowc->a + (gashighc->a - gaslowc->a) * dint) * d; // Интерполяция альфа-канала*/
 }
-
 
 float sqrtf_fast(float x)
 {
