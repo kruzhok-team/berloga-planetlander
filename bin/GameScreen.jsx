@@ -545,7 +545,7 @@ class Game {
   }
 
   showCanvasOverlay(canvas, text, imageUrl) {
-    this.audio.EnableDisable();
+    this.audio.Disable();
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
@@ -602,7 +602,7 @@ class Game {
     const width = canvas.width;
     const height = canvas.height;
     ctx.clearRect(0, 0, width, height);
-        this.audio.EnableDisable();
+        this.audio.Enable();
     canvas.removeEventListener("keydown", this.handleKeyDown);
     this.gamePhase = GAME_PHASES.PLAY;
     if (this.overlaycnt == 1) {

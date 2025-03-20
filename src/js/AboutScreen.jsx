@@ -128,7 +128,43 @@ const AboutScreen = ({ onBack }) => (
         </div>
       </div>
 
-      {/* Третий ряд - кнопка Назад */}
+      {/* Новая плашка о сообществе */}
+      <div
+        style={{
+          width: "100%",
+          padding: "20px",
+          borderRadius: "15px",
+          border: "2px solid rgba(255, 255, 255, 0.3)",
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
+          boxSizing: "border-box",
+        }}
+      >
+        <p style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}>
+          Игра вдохновлена{" "}
+          <a
+            href="https://s-macke.github.io/Interplanetary-Postal-Service/bin/index.html"
+            style={{ color: "white", textDecoration: "underline" }}
+          >
+            Interplanetary Postal Service
+          </a>{" "}
+          и разработана с учетом принципов и философии проектов с открытым исходным
+          кодом. Мы поддерживаем сообщество разработчиков и верим, что такой подход
+          способствует созданию интересных продуктов.
+        </p>
+        <p style={{ fontSize: "18px", lineHeight: "1.5", color: "#e0e0e0" }}>
+          Рады обратной связи, предложениям и участию сообщества в дальнейшем развитии
+          игры. Репозиторий:{" "}
+          <a
+            href="https://github.com/kruzhok-team/berloga-planetlander"
+            style={{ color: "white", textDecoration: "underline" }}
+          >
+            berloga-planetlander
+          </a>
+        </p>
+      </div>
+
+      {/* Ряд с кнопкой Назад */}
       <div
         style={{
           width: "100%",
